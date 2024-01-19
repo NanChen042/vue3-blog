@@ -27,7 +27,14 @@ export default defineConfig({
           propList: ['*'],
         })
       ]
-    }
+    },
+    preprocessorOptions: {
+        less: {
+          charset: false,
+          additionalData: '@import "./src/assets/css/global.less";',
+        },
+      },
+
   }
 
 

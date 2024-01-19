@@ -96,20 +96,49 @@ const particlesLoaded = async (container: any) => {
 const status = ref(false);
 const doSmth = () => {
   console.log(1);
-
   status.value = true;
 };
+
+// 渐变色
+let colors = [
+  "#f00",
+  "#000",
+  "yellow",
+  "blue",
+  "black",
+  "gold",
+  "orange",
+  "gray",
+  "pink",
+  "maroon",
+  "green",
+  "rgb(42, 75, 165)",
+  "#009393",
+  "#bbffbb",
+  "#ceceff",
+  "purple",
+];
+const color = ref('')
+let  f1=()=> {
+  let math = Math.floor(Math.random() * colors.length);
+  console.log(math);
+  // 获取随机数
+  //   div.style.backgroundColor = color[math]; //随机的背景颜色
+  color.value = colors[math]; //设置随机颜色
+}
+setInterval(f1, 1000);
+f1();
 </script>
 
 <template>
   <!-- <vue-particles id="tsparticles" :particlesLoaded="particlesLoaded" url="http://foo.bar/particles.json" /> -->
   <div class="box">
 
-    <vuetyped :strings="['我的沉思：', '......','穿越思想和经历的旅程', 'Welcome to visit Southern Wind Blog！']" :fadeOutDelay="1500" :loop="false" :startDelay="300" :typeSpeed="150" :backSpeed="50" :fadeOut="true" :backDelay="3000" :showCursor="true" :smart-backspace="true" @onComplete="doSmth()">
+    <vuetyped :strings="['Life in Color~', '......','穿越思想和经历的旅程', 'Welcome to visit Southern Wind Blog！']" :fadeOutDelay="1500" :loop="false" :startDelay="300" :typeSpeed="150" :backSpeed="50" :fadeOut="true" :backDelay="3000" :showCursor="true" :smart-backspace="true" @onComplete="doSmth()">
       <div v-if="status">
       </div>
-      <div class="typing">
-
+      <div class="typing" :style="'color:'+`${color}`" >
+        1321232
       </div>
       <!-- <div class="typing" /> -->
     </vuetyped>
@@ -118,38 +147,17 @@ const doSmth = () => {
 
 </template>
 
-<style scoped>
-@media (max-width:750px) {
-  .typed-element{
+<style scoped lang="less">
+@media (min-width: 750px) {
+  .typed-element {
     /* font-size: .3rem !important; */
+    .typing {
+      letter-spacing: 0.04rem;
+      font-family: "宋体";
+      font-weight: 700;
+      font-size: 0.38rem !important;
+    }
   }
-}
-.typed-element {
-  height: 100vh;
-  justify-content: center;
-  align-content: center;
-  flex-wrap: wrap;
-  text-align: center;
-  font-size: .28rem;
- 
-}
-.typed-element .typing {
-  letter-spacing: .04rem;
-  font-family: MyCustomFont;
-  font-weight: 700;
-  font-size: .68rem;
-}
-.typed-element .typed-cursor {
-  font-weight: 100 !important;
-}
-.h2 {
-  width: 100%;
-  font-size: 0.6rem;
-}
-.overall-header-left {
-  align-self: center;
-  justify-self: center;
-  font-size: .3rem; /* 要给容器设置font-size */
 }
 
 .box {
@@ -158,17 +166,38 @@ const doSmth = () => {
   height: 100vh;
   background-size: cover;
   background-repeat: no-repeat;
+  .typed-element {
+    height: 100vh;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    text-align: center;
+    font-size: 0.28rem;
+
+    .typing {
+      letter-spacing: 0.04rem;
+      font-family: "宋体";
+      background: -webkit-gradient(
+        linear,
+        left top,
+        right top,
+        from(#59a5ff),
+        to(#6e6bff)
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+      font-size: 0.68rem;
+      .typed-cursor {
+        font-weight: 100 !important;
+      }
+    }
+  }
 }
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+.overall-header-left {
+  align-self: center;
+  justify-self: center;
+  font-size: 0.3rem; /* 要给容器设置font-size */
 }
 </style>
