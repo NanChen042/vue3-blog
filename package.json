@@ -10,9 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.3.11"
+    "@tsparticles/slim": "^3.1.0",
+    "@tsparticles/vue3": "^3.0.0",
+    "amfe-flexible": "^2.2.1",
+    "postcss-plugin-px2rem": "^0.8.1",
+    "postcss-pxtorem": "^6.0.0",
+    "vue": "^3.3.11",
+    "vue3typed": "^0.1.5"
   },
   "devDependencies": {
+    "@types/node": "^20.11.5",
     "@vitejs/plugin-vue": "^4.5.2",
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
