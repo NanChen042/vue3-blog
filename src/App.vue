@@ -118,14 +118,14 @@ let colors = [
   "#ceceff",
   "purple",
 ];
-const color = ref('')
-let  f1=()=> {
+const color = ref("");
+let f1 = () => {
   let math = Math.floor(Math.random() * colors.length);
   console.log(math);
   // 获取随机数
   //   div.style.backgroundColor = color[math]; //随机的背景颜色
   color.value = colors[math]; //设置随机颜色
-}
+};
 setInterval(f1, 1000);
 f1();
 </script>
@@ -137,8 +137,8 @@ f1();
     <vuetyped :strings="['Life in Color~', '......','穿越思想和经历的旅程', 'Welcome to visit Southern Wind Blog！']" :fadeOutDelay="1500" :loop="false" :startDelay="300" :typeSpeed="150" :backSpeed="50" :fadeOut="true" :backDelay="3000" :showCursor="true" :smart-backspace="true" @onComplete="doSmth()">
       <div v-if="status">
       </div>
-      <div class="typing" :style="'color:'+`${color}`" >
-        1321232
+      <div class="typing">
+
       </div>
       <!-- <div class="typing" /> -->
     </vuetyped>
@@ -173,20 +173,29 @@ f1();
     flex-wrap: wrap;
     text-align: center;
     font-size: 0.28rem;
+    animation: hueRotate 3s infinite alternate;
 
+    @keyframes hueRotate {
+      100% {
+        filter: hue-rotate(360deg);
+      }
+    }
     .typing {
       letter-spacing: 0.04rem;
       font-family: "宋体";
-      background: -webkit-gradient(
-        linear,
-        left top,
-        right top,
-        from(#59a5ff),
-        to(#6e6bff)
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 700;
+      background: var(--vp-home-hero-name-background);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: var(--vp-home-hero-name-color);
+      animation: hueRotate 3s infinite alternate;
+
+      @keyframes hueRotate {
+        100% {
+          filter: hue-rotate(360deg);
+        }
+      }
+
+      font-weight: bold;
       font-size: 0.68rem;
       .typed-cursor {
         font-weight: 100 !important;
