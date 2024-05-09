@@ -1,6 +1,6 @@
 # vue3-blog帮助文档
 
-### tsParticles安装
+### tsParticles安装配置
 ```ts
 pnpm install @tsparticles/vue3
 pnpm install @tsparticles/slim
