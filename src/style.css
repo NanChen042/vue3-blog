@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+*{margin: 0;padding: 0;}
+:root{
+    --vp-home-hero-name-color: transparent;
+    --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #bd34fe, #41d1ff);
+}
+:root {
+    --el-color-primary: green !important;
+    --el-menu-active-color: green !important;
+  }
