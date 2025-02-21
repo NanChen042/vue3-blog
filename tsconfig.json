@@ -23,7 +23,7 @@
     "alwaysStrict": true, // 在代码中注入'use strict'
     "baseUrl": "./", // 解析非相对模块的基地址，默认是当前目录
     "paths": { "@/*": ["src/*"] }, // 路径映射，相对于baseUrl
-    "types": ["element-plus/global"]
+    "types": ["element-plus/global", "node", "axios"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]

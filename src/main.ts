@@ -1,5 +1,5 @@
 /*
- * @Description: 
+ * @Description:
  * @Autor: Southern Wind
  * @Date: 2024-01-19 10:02:23
  * @LastEditors: Southern Wind
@@ -23,18 +23,29 @@ import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 
 import './styles/dark/css-vars.css'
+import './styles/index.scss'
 
 
 import './assets/css/input.css';
 import './assets/css/global.less';
 
 import router from "./router/index" // 引入router
+import ElementPlus from 'element-plus'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
 const pinia = createPinia();
 pinia.use(piniaPluginPersist)
-createApp(App).use(vuetyped).use(Particles, {
+const app = createApp(App)
+
+// 注册所有图标
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
+
+app.use(vuetyped).use(Particles, {
     init: async (engine:any) => {
         // await loadFull(engine); // you can load the full tsParticles library from "tsparticles" if you need it
         await loadSlim(engine); // or you can load the slim version from "@tsparticles/slim" if don't need Shapes or Animations
     },
 })
-.use(router).use(pinia).mount('#app')
+.use(router).use(pinia).use(ElementPlus).mount('#app')

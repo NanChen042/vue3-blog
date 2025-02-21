@@ -1,18 +1,30 @@
-<!-- author: Mr.J -->
-<!-- date: 2024-01-31 10:34:16 -->
-<!-- description: Vue3+JS代码块模板 -->
 <template>
   <!-- <vue-particles id="tsparticles" :particlesLoaded="particlesLoaded" url="http://foo.bar/particles.json" /> -->
   <div class="box">
     <!-- <div v-if="status"> -->
+    <div class="mobile-menu-btn" @click="showDrawer = true">
+      <i class="menu-icon"></i>
+    </div>
     <ButtonStyle></ButtonStyle>
     <!-- </div> -->
-    <vuetyped :strings="['开篇......','无聊是非常有必要的，一个人在空白时间做的事，决定了这个人和其他人的根本不同。']" :fadeOutClass="'fadeOutClass'" :fadeOutDelay="10" :loop="false" :startDelay="10" :typeSpeed="100" :backSpeed="10" :fadeOut="true" :autoInsertCss="true" :backDelay="1500" :showCursor="false" :smart-backspace="true" @onComplete="doSmth()">
 
+    <vuetyped
+      v-if="isDataLoaded"
+      :strings="sentences"
+      :fadeOutClass="'fadeOutClass'"
+      :fadeOutDelay="10"
+      :loop="false"
+      :startDelay="10"
+      :typeSpeed="100"
+      :backSpeed="10"
+      :fadeOut="true"
+      :autoInsertCss="true"
+      :backDelay="1500"
+      :showCursor="false"
+      :smart-backspace="true"
+      @onComplete="doSmth()">
       <div class="typing">
-
       </div>
-      <!-- <div class="typing" /> -->
     </vuetyped>
     <vue-particles id="tsparticles" :particlesLoaded="particlesLoaded" :options="options" />
 
@@ -28,16 +40,20 @@
         </button>
       </div>
     </div>
+
+    <MobileDrawer v-model="showDrawer" />
   </div>
 
 </template>
 
 <script setup lang="ts">
 // <!--引入粒子特效的相关配置-->
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import axios from 'axios';
 import ButtonStyle from "../../components/ButtonStyle.vue";
 // import vuetyped from "vue3typed/libs/typed";
 import {useRouter} from 'vue-router';
+import MobileDrawer from '../../components/MobileDrawer.vue';
 const router = useRouter();
 const options = {
   background: {
@@ -159,6 +175,47 @@ f1();
 const FormRouter =()=>{
   router.push('/form')
 }
+
+// 修改句子存储的方式
+const sentences = ref<string[]>(['开篇......']);
+
+// 添加一个标志来控制组件显示
+const isDataLoaded = ref(false);
+
+// 修改获取句子的方法
+const fetchSentence = async () => {
+  try {
+    const response = await axios.get('/api/api/yiyan/index.php');
+    console.log('API响应:', response);
+
+    // 设置句子数组
+    sentences.value = [
+      '开篇......',
+      response.data.data
+    ];
+
+    // 数据加载完成后，将标志设置为 true
+    isDataLoaded.value = true;
+
+    console.log('更新后的句子数组:', sentences.value);
+  } catch (error) {
+    console.error('获取句子失败:', error);
+    sentences.value = [
+      '开篇......',
+      '无聊是非常有必要的，一个人在空白时间做的事，决定了这个人和其他人的根本不同。'
+    ];
+    // 即使是使用默认句子，也标记为加载完成
+    isDataLoaded.value = true;
+  }
+};
+
+// 在组件挂载时获取句子
+onMounted(() => {
+  fetchSentence();
+});
+
+// 添加抽屉控制变量
+const showDrawer = ref(false);
 </script>
 
 <style scoped lang="less">
@@ -483,6 +540,47 @@ button {
   40%,
   60% {
     color: #fff;
+  }
+}
+
+.mobile-menu-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 997;
+  padding: 8px;
+  display: none;  // 默认隐藏
+
+  .menu-icon {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #fff;
+    position: relative;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 2px;
+      background: #fff;
+      left: 0;
+    }
+
+    &::before {
+      top: -8px;
+    }
+
+    &::after {
+      bottom: -8px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: block;  // 在移动端显示
   }
 }
 </style>

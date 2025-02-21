@@ -1,8 +1,8 @@
 /*
  * @Author: Southern Wind
  * @Date: 2024-06-27 10:23:51
- * @LastEditTime: 2024-06-27 10:33:13
- * @Description: 
+ * @LastEditTime: 2025-01-17 11:24:56
+ * @Description:
  */
 import { randomText, ranInt } from "@/utils/index";
 import loadFail from "../assets/load-fail.png";
@@ -17,7 +17,7 @@ export interface ItemInfo {
   width?: number
   /** 图片的高度，前端获取图片信息之后设置 */
   height?: number
-  /** 
+  /**
    * 当前节点的所在列的高度
    * - 非列的总高度，只是调试用
    */
@@ -57,7 +57,7 @@ const list2 = [
 const getPhotoList = () => !Math.round(Math.random()) ? list1 : list2;
 
 /**
- * 
+ *
  * @param maxDelay 最大延迟毫秒数，不能低于`100`
  */
 export function useRequest(maxDelay = 1000) {
@@ -66,7 +66,8 @@ export function useRequest(maxDelay = 1000) {
    * @param total 条数
    */
   function getList(total: number): Promise<{ code: number, data: ItemList }> {
-    return new Promise(function(resolve, reject) {
+    // @ts-ignore
+    return new Promise(function(resolve, _reject) {
       const list: ItemList = [];
       for (let i = 0; i < total; i++) {
         id++;

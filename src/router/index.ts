@@ -1,39 +1,7 @@
-/*
- * @Description: router
- * @Autor: Southern Wind
- * @Date: 2024-05-13 10:40:50
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-07-08 09:54:53
- */
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import NotFound from '@/views/NotFound/404.vue';
 import { useStore } from '@/store/index';
 
-
-// RouteRecordRaw 内置的类型接口
-// 接口大写I
-/* interface IRouterList{
-  path?: string;
-  name?: string;
-  meta?: {
-    menu: string;
-  };
-  component?: any;
-  redirect?: string;
-
-}
-
-interface IRouterListChildren{
-  path: string;
-  name?: string;
-  meta?: {
-    menu?: string;
-  };
-  component?: any;
-  children?:IRouterList[]
-} */
-// 1. 配置路由
-// const routes: Array<RouteRecordRaw> = [
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/:catchAll(.*)',
@@ -49,16 +17,35 @@ const routes: Array<RouteRecordRaw> = [
 
   },
   {
-    path: "/", 
+    path: "/",
     component: () => import("../views/Index/index.vue"),
   },
 
   {
-    path: "/form", 
+    path: "/form",
+    name: "Form",
     component: () => import("../views/Form/Form.vue"),
+    redirect: '/form/profile',
+    children: [
+      {
+        path: "profile",
+        name: "Profile",
+        component: () => import("../views/Form/components/Profile.vue")
+      },
+      {
+        path: "skills",
+        name: "Skills",
+        component: () => import("../views/Form/components/Skills.vue")
+      },
+      {
+        path: "projects",
+        name: "Projects",
+        component: () => import("../views/Form/components/Projects.vue")
+      }
+    ]
   },
   {
-    path: "/anli", 
+    path: "/anli",
     component: () => import("../views/Anli/Anli.vue"),
   },
 
@@ -69,7 +56,7 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const store = useStore()
   let token: string | null = store.token;
 

@@ -52,7 +52,7 @@
       result = new Array(page.column).fill(0).map((_, index) => ({ index: index, list: [], height: 0 }));
       cacheList = [];
     }
-    addList.forEach(function(item, index) {
+    addList.forEach(function(item) {
       result.sort((a, b) => a.height - b.height);
       const target = result[0];
       // console.log("target-index >> ", target.index, "target-height >> ", target.height);

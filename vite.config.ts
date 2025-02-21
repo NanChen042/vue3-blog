@@ -1,25 +1,12 @@
-/*
- * @Description: 
- * @Autor: Southern Wind
- * @Date: 2024-05-13 10:40:50
- * @LastEditors: Southern Wind
- * @LastEditTime: 2024-06-06 10:35:21
- */
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue';
-import { resolve } from 'path'
+import path from 'path'
 // 模块自动化导入
 import ViteAutoImport from 'unplugin-auto-import/vite'
 
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-const pathResolve = (dir: string): any => {
-  return resolve(__dirname, ".", dir)
-}
-const alias: Record<string, string> = {
-  '@': pathResolve("src")
-}
 
 export default defineConfig({
   base: process.env.NODE_ENV === 'production' ? "/vue3-blog" : "/",
@@ -39,16 +26,17 @@ export default defineConfig({
   })
   ],
   resolve: {
-    alias
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
   },
   server: {
     proxy: {
       '/api': {
-        target: '0,0,0,0',
+        target: 'https://www.wniui.com',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api')
-      },
-
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
     }
   },
 
@@ -61,7 +49,16 @@ export default defineConfig({
       },
     },
 
+  },
+  build: {
+    // 关闭打包时的警告
+    chunkSizeWarningLimit: 2000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'echarts': ['echarts'],
+        }
+      }
+    }
   }
-
-
 })

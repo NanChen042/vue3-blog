@@ -17,20 +17,20 @@
     </TransitionGroup>
   </template>
   <script lang="ts" setup>
-  import { ref, reactive, computed, onMounted, onUnmounted } from "vue";
+  import {  reactive, computed, onMounted, onUnmounted } from "vue";
   import { useRequest, type ItemList } from "./hooks";
-  
+
   const { getList } = useRequest();
-  
+
   const page = reactive({
     loading: false,
     column: 4,
     update: 0,
     move: true
   });
-  
+
   let cacheList: ItemList = [];
-  
+
   const pageList = computed(function() {
     const result = new Array(page.column).fill(0).map((_, index) => ({ id: index, list: [] as ItemList }));
     let columnIndex = 0;
@@ -46,8 +46,8 @@
     console.log("重新计算列表 !!----------!!");
     return result;
   });
-  
-  
+
+
   async function getData() {
     page.loading = true;
     const res = await getList(20);
@@ -58,15 +58,15 @@
       page.update++;
     }
   }
-  
+
   function refresh() {
     cacheList = [];
     page.update++;
     getData();
   }
-  
+
   let observer: ResizeObserver;
-  
+
   onMounted(function() {
     getData();
     observer = new ResizeObserver(function(entries) {
@@ -81,11 +81,11 @@
     });
     observer.observe(document.querySelector(".water-list")!);
   });
-  
+
   onUnmounted(function() {
     observer.disconnect();
   })
-  
+
   </script>
   <style lang="scss">
   @import url("./main.scss");

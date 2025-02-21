@@ -1,4 +1,10 @@
 # vue3-blog帮助文档
+### 部署
+```ts
+pnpm install gh-pages -D
+pnpm run deploy
+```
+
 
 ### tsParticles安装
 ```ts
@@ -20,13 +26,7 @@ createApp(App).use(Particles, {
 
 在App.vue页面中使用
 ```html
-<!--
- * @Description: 
- * @Autor: Southern Wind
- * @Date: 2024-01-19 10:02:23
- * @LastEditors: Southern Wind
- * @LastEditTime: 2024-01-19 11:31:47
--->
+
 <script setup lang="ts">
 // <!--引入粒子特效的相关配置-->
 const options = {
