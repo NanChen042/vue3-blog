@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎来到奇妙动物园</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            background-color: #ffffff;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #27ae60;
+        }
+
+        /* 英雄区域样式 */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1534567153574-2b12153a87f0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            color: white;
+        }
+
+        .hero-badge {
+            background-color: #27ae60;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            max-width: 800px;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .btn-outline {
+            border: 2px solid white;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* 特色动物区域 */
+        .featured-animals {
+            padding: 5rem 2rem;
+            background-color: #f8f9fa;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .animals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .animal-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .animal-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .animal-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .animal-content {
+            padding: 1.5rem;
+        }
+
+        .animal-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .animal-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* 访客信息区域 */
+        .visitor-info {
+            padding: 5rem 2rem;
+            background-color: white;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .info-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .info-icon {
+            font-size: 2.5rem;
+            color: #27ae60;
+            margin-bottom: 1rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">奇妙动物园</div>
+            <div class="nav-links">
+                <a href="#home">首页</a>
+                <a href="#animals">动物展区</a>
+                <a href="#visitor">游客服务</a>
+                <a href="#about">关于我们</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">全新开放</div>
+            <h1 class="hero-title">探索自然奇迹，感受生命魅力</h1>
+            <p class="hero-description">
+                欢迎来到奇妙动物园，这里有数百种珍稀动物，等待您的探索。我们致力于野生动物保护和环境教育，为您带来难忘的观赏体验。
+            </p>
+            <div class="hero-buttons">
+                <a href="#tickets" class="btn btn-primary">立即购票</a>
+                <a href="#tour" class="btn btn-outline">虚拟导览</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 特色动物区域 -->
+    <section class="featured-animals" id="animals">
+        <h2 class="section-title">特色动物展区</h2>
+        <div class="animals-grid">
+            <div class="animal-card">
+                <img src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="大熊猫" class="animal-image">
+                <div class="animal-content">
+                    <h3 class="animal-title">大熊猫</h3>
+                    <p class="animal-description">国宝级珍稀动物，憨态可掬的竹子美食家。每天都能看到它们悠闲地享用竹子的可爱模样。</p>
+                </div>
+            </div>
+            <div class="animal-card">
+                <img src="https://images.unsplash.com/photo-1546182990-dffeafbe841d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="非洲狮" class="animal-image">
+                <div class="animal-content">
+                    <h3 class="animal-title">非洲狮</h3>
+                    <p class="animal-description">草原之王，威风凛凛。在专业驯养师的照料下，您可以近距离观察它们的日常生活。</p>
+                </div>
+            </div>
+            <div class="animal-card">
+                <img src="https://images.unsplash.com/photo-1562726131-5478df48d5bb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="北极熊" class="animal-image">
+                <div class="animal-content">
+                    <h3 class="animal-title">北极熊</h3>
+                    <p class="animal-description">来自北极的可爱精灵，在特制的低温环境中，展现它们活泼好动的一面。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 访客信息区域 -->
+    <section class="visitor-info" id="visitor">
+        <h2 class="section-title">访客服务</h2>
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-icon">🕒</div>
+                <h3>开放时间</h3>
+                <p>周一至周日<br>09:00 - 17:30</p>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">🎫</div>
+                <h3>票价信息</h3>
+                <p>成人票：￥120<br>儿童票：￥60</p>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">🚌</div>
+                <h3>交通指南</h3>
+                <p>地铁2号线动物园站<br>公交105路、205路</p>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">📞</div>
+                <h3>联系我们</h3>
+                <p>电话：400-888-8888<br>邮箱：info@zoo.com</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
