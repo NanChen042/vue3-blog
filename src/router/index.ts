@@ -20,6 +20,10 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     component: () => import("../views/Index/index.vue"),
   },
+  {
+    path: "/map",
+    component: () => import("../views/Map/map.vue"),
+  },
 
   {
     path: "/form",
