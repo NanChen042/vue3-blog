@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import path from 'path'
 // 模块自动化导入
 import ViteAutoImport from 'unplugin-auto-import/vite'
+import tailwindcss from '@tailwindcss/vite'
 
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -12,6 +13,7 @@ export default defineConfig({
   base: process.env.NODE_ENV === 'production' ? "/vue3-blog" : "/",
   // base: "/vue3-blog",
   plugins: [vue(),
+  tailwindcss(),
   AutoImport({
     resolvers: [ElementPlusResolver()],
   }),
@@ -30,22 +32,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'https://www.wniui.com',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
-      }
-    }
-  },
 
   // 适配
   css: {
     preprocessorOptions: {
       less: {
         charset: false,
-        additionalData: '@import "./src/assets/css/global.less";',
+        // additionalData: '@import "./src/assets/css/global.less";',
       },
     },
 
@@ -55,8 +48,10 @@ export default defineConfig({
     chunkSizeWarningLimit: 2000,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'echarts': ['echarts'],
+        manualChunks(id) {
+          if (id.includes('echarts')) {
+            return 'echarts';
+          }
         }
       }
     }

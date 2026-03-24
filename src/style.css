@@ -1,12 +1,124 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-*{margin: 0;padding: 0;}
-:root{
-    --vp-home-hero-name-color: transparent;
-    --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #bd34fe, #41d1ff);
+@import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #7c3aed;
+  --el-color-primary: var(--color-primary);
+  
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+  --slate-950: #020617;
 }
+
+/* Custom global styles */
 :root {
-    --el-color-primary: green !important;
-    --el-menu-active-color: green !important;
-  }
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light;
+  
+  --bg-page: var(--slate-50);
+  --bg-page-rgb: 248, 250, 252;
+  --text-page: var(--slate-900);
+  --border-page: var(--slate-200);
+}
+
+html.dark {
+  color-scheme: dark;
+  --bg-page: var(--slate-950);
+  --bg-page-rgb: 2, 6, 23;
+  --text-page: var(--slate-50);
+  --border-page: var(--slate-800);
+}
+
+html, body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--bg-page);
+  color: var(--text-page);
+}
+
+/* Element Plus Global Mapping (Grays) */
+:root {
+  --el-bg-color: var(--slate-50);
+  --el-bg-color-overlay: #ffffff;
+  --el-text-color-primary: var(--slate-900);
+  --el-border-color: var(--slate-200);
+  --el-fill-color-blank: #ffffff;
+}
+
+.dark {
+  --el-bg-color: var(--slate-950);
+  --el-bg-color-overlay: var(--slate-900);
+  --el-text-color-primary: var(--slate-100);
+  --el-border-color: var(--slate-800);
+  --el-fill-color-blank: var(--slate-900);
+  
+  --el-text-color-regular: var(--slate-400);
+  --el-text-color-secondary: var(--slate-500);
+  --el-border-color-light: var(--slate-800);
+  --el-border-color-lighter: var(--slate-800);
+}
+
+/* Global styles */
+* {
+  box-sizing: border-box;
+}
+
+/* View Transition API styles for theme flip */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+.dark::view-transition-old(root) {
+  z-index: 9999;
+}
+.dark::view-transition-new(root) {
+  z-index: 1;
+}
+
+/* Suppress transitions during theme flip to avoid flicker */
+.no-transition,
+.no-transition * {
+  transition: none !important;
+}
+
+/* NavMenu Popper Styles - Global to affect body-injected elements */
+.custom-dropdown-popper {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.custom-dropdown-popper .el-dropdown-menu {
+  background-color: var(--bg-page) !important;
+  color: var(--text-page) !important;
+  border: 1px solid var(--border-page) !important;
+  border-radius: 1rem !important;
+  padding: 0.5rem !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.dark .custom-dropdown-popper .el-dropdown-menu {
+  background-color: rgba(15, 23, 42, 0.8) !important; /* slate-900 with alpha */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}

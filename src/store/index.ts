@@ -11,15 +11,12 @@ import { defineStore } from 'pinia'
 // 第一个参数是应用程序中 store 的唯一 id
 export const useStore = defineStore('storeToken', {
     state: () => ({
-        token: ''
+        token: localStorage.getItem('token') || ''
     }),
-    persist: {
-        enabled: true, // 启用
-        strategies: [
-          // storage 可选localStorage或sessionStorage
-          // paths 给指定数据持久化
-          { key: 'user', storage: localStorage, paths: ['token'] }
-        ]
-      },
-
+    actions: {
+        setToken(token: string) {
+            this.token = token;
+            localStorage.setItem('token', token);
+        }
+    }
 })
