@@ -109,16 +109,78 @@ html, body {
 }
 
 .custom-dropdown-popper .el-dropdown-menu {
-  background-color: var(--bg-page) !important;
-  color: var(--text-page) !important;
-  border: 1px solid var(--border-page) !important;
-  border-radius: 1rem !important;
-  padding: 0.5rem !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
-  backdrop-filter: blur(16px) !important;
+  min-width: 140px;
+  padding: 0.375rem !important;
+  border-radius: 0.875rem !important;
+  border: 1px solid #e2e8f0 !important; /* slate-200 */
+  background-color: #ffffff !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: 0 8px 30px -8px rgba(0, 0, 0, 0.12), 0 4px 12px -4px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Force reset inherited purple color from active nav button */
+.custom-dropdown-popper .el-dropdown-menu__item {
+  color: #475569 !important; /* slate-600 */
+}
+.custom-dropdown-popper .el-dropdown-menu__item a {
+  color: #475569 !important; /* slate-600 */
+}
+.custom-dropdown-popper .el-dropdown-menu__item a:hover {
+  background-color: #f5f3ff !important; /* purple-50 */
+  color: #7c3aed !important; /* purple-600 */
+}
+.custom-dropdown-popper .el-dropdown-menu__item a.is-active {
+  background-color: #f5f3ff !important;
+  color: #7c3aed !important;
 }
 
 .dark .custom-dropdown-popper .el-dropdown-menu {
-  background-color: rgba(15, 23, 42, 0.8) !important; /* slate-900 with alpha */
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  background-color: #0f172a !important;
+  border-color: #1e293b !important; /* slate-800 */
+  box-shadow: 0 8px 30px -8px rgba(0, 0, 0, 0.5), 0 4px 12px -4px rgba(0, 0, 0, 0.3) !important;
 }
+
+/* Dark mode router-link color within dropdown */
+.dark .custom-dropdown-popper .el-dropdown-menu__item,
+.dark .custom-dropdown-popper .el-dropdown-menu__item a {
+  color: #94a3b8 !important; /* slate-400 */
+}
+.dark .custom-dropdown-popper .el-dropdown-menu__item a:hover,
+.dark .custom-dropdown-popper .el-dropdown-menu__item a.is-active {
+  background-color: rgba(124, 58, 237, 0.15) !important;
+  color: #a78bfa !important; /* violet-400 */
+}
+
+/* Mega Menu Popper */
+.mega-menu-popper {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.mega-menu-popper > .el-popper__content {
+  padding: 0px !important;
+  border-radius: 1.5rem !important;
+  border: 1px solid #e2e8f0 !important;
+  background-color: #ffffff !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15), 0 5px 15px -5px rgba(0, 0, 0, 0.1) !important;
+  overflow: hidden !important;
+}
+
+.dark .mega-menu-popper > .el-popper__content {
+  background-color: #0f172a !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 15px 50px -12px rgba(0, 0, 0, 0.6), 0 8px 18px -6px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Ensure no default menu padding in mega menu */
+.mega-menu-popper .el-dropdown-menu {
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+

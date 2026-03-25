@@ -13,7 +13,9 @@ declare module 'vue' {
   export interface GlobalComponents {
     ButtonStyle: typeof import('./src/components/ButtonStyle.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
+    ElCollapseTransition: typeof import('element-plus/es')['ElCollapseTransition']
     ElContainer: typeof import('element-plus/es')['ElContainer']
+    ElDrawer: typeof import('element-plus/es')['ElDrawer']
     ElDropdown: typeof import('element-plus/es')['ElDropdown']
     ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
     ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']

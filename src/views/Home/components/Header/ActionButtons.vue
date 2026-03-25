@@ -13,21 +13,29 @@
 
     <!-- App Grid -->
     <el-tooltip :content="$t('header.lab_desc')" placement="bottom">
-      <el-popover placement="bottom" :width="300" trigger="click" popper-class="grid-popover">
-        <template #reference>
-          <button class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-all cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-            </svg>
-          </button>
-        </template>
-        <div class="grid grid-cols-3 gap-4 p-2">
-          <div v-for="app in apps" :key="app.name" class="flex flex-col items-center gap-2 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer transition-colors group">
-            <div class="w-10 h-10 flex items-center justify-center bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-lg group-hover:scale-110 transition-transform" v-html="app.icon"></div>
-            <span class="text-xs font-medium text-slate-600 dark:text-slate-400">{{ app.name }}</span>
+      <div>
+        <el-popover placement="bottom" :width="320" trigger="click" popper-class="grid-popover">
+          <template #reference>
+            <button class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-all cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+              </svg>
+            </button>
+          </template>
+          <div class="p-4">
+            <div class="flex items-center justify-between mb-4 px-1">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">{{ $t('header.lab_desc') }}</span>
+              <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div v-for="app in apps" :key="app.name" class="flex flex-col items-center gap-2 p-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer transition-all duration-300 group">
+                <div class="w-12 h-12 flex items-center justify-center bg-linear-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 text-purple-600 dark:text-purple-400 rounded-xl group-hover:scale-110 group-hover:shadow-md transition-all duration-300" v-html="app.icon"></div>
+                <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 text-center leading-tight">{{ app.name }}</span>
+              </div>
+            </div>
           </div>
-        </div>
-      </el-popover>
+        </el-popover>
+      </div>
     </el-tooltip>
 
     <!-- Theme Toggle -->

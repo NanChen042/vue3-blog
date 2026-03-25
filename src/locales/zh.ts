@@ -9,6 +9,16 @@ export default {
     chat: '聊天',
     lab: '实验室'
   },
+  tools: {
+    frontend: '前端框架',
+    dev: '开发工具',
+    css: '样式资源',
+    animation: '动画引擎',
+    visual: '可视化工具',
+    design: '设计资源',
+    ai: 'AI工具',
+    api: '接口服务'
+  },
   header: {
     search: 'AI 搜索...',
     lab_desc: '实验室功能',
@@ -19,6 +29,10 @@ export default {
     profile: '个人中心',
     settings: '设置',
     logout: '退出登录'
+  },
+  blog: {
+    latest_desc: '发现最新的技术分享、教程与行业洞察。',
+    categories_desc: '按技术栈分类检索，快速找到你感兴趣的内容。'
   },
   // --- 新增的主页翻译区块 ---
   home: {

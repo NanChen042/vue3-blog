@@ -9,6 +9,16 @@ export default {
     chat: 'Chat',
     lab: 'Lab'
   },
+  tools: {
+    frontend: 'Frontend Frameworks',
+    dev: 'Developer Tools',
+    css: 'CSS Resources',
+    animation: 'Animation Engines',
+    visual: 'Data Visualization',
+    design: 'Design Resources',
+    ai: 'AI Tools',
+    api: 'API Services'
+  },
   header: {
     search: 'AI Search...',
     lab_desc: 'Laboratory Features',
@@ -19,6 +29,10 @@ export default {
     profile: 'Profile',
     settings: 'Settings',
     logout: 'Logout'
+  },
+  blog: {
+    latest_desc: 'Discover the latest technical insights and stories.',
+    categories_desc: 'Browse by tech stack to find what you need.'
   },
   // --- 新增的主页翻译区块 ---
   home: {
