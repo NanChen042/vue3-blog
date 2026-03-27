@@ -31,6 +31,11 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("../views/Games/Games.vue"),
       },
       {
+        path: "game/:id",
+        name: "GameDetail",
+        component: () => import("../views/Games/GameDetail.vue"),
+      },
+      {
         path: "chat",
         name: "Chat",
         component: () => import("../views/Chat/Chat.vue"),
@@ -46,6 +51,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/:pathMatch(.*)*",
     name: "NotFound",
     component: () => import("../views/404/NotFound.vue"),
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: () => import("../views/Auth/Login.vue"),
   },
   {
     path: "/guide",
