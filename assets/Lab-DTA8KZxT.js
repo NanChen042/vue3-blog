@@ -1,1 +1,0 @@
-import{E as e,It as t,U as n,v as r,x as i}from"./vue.runtime.esm-bundler-SuLFlfFu.js";var a={class:`p-8`},o={class:`text-2xl font-bold`},s=e({name:`Lab`,__name:`Lab`,setup(e){return(e,s)=>(n(),i(`div`,a,[r(`h1`,o,t(e.$t(`nav.lab`)),1),s[0]||=r(`p`,{class:`mt-4 text-slate-600 dark:text-slate-400`},`Placeholder for Lab page Content.`,-1)]))}});export{s as default};

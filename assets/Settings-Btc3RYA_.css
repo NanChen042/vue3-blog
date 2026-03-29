@@ -1,0 +1,1 @@
+@keyframes blob-505a1a2d{0%{transform:translate(0)scale(1)}33%{transform:translate(30px,-40px)scale(1.05)}66%{transform:translate(-20px,20px)scale(.95)}to{transform:translate(0)scale(1)}}.animate-blob[data-v-505a1a2d]{animation:8s cubic-bezier(.4,0,.2,1) infinite alternate blob-505a1a2d}[data-v-505a1a2d]::-webkit-scrollbar{display:none}
