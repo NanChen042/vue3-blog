@@ -77,9 +77,9 @@
             </div>
           </el-dropdown-menu>
 
-          <el-dropdown-menu v-else class="mt-2 bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl dark:shadow-2xl">
-            <el-dropdown-item v-for="child in item.children" :key="child.index">
-              <router-link :to="child.path" @click="closeDropdown(item.index)" active-class="is-active">
+          <el-dropdown-menu v-else class="mt-2 bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl dark:shadow-2xl" style="padding: 5px;">
+            <el-dropdown-item v-for="child in item.children" :key="child.index" style="padding: 0; margin: 0;">
+              <router-link :to="child.path" @click="closeDropdown(item.index)" active-class="is-active" style="display: block; padding: 0.55rem 1rem; border-radius: 0.4rem;">
                 {{ $t(child.labelKey) }}
               </router-link>
             </el-dropdown-item>
@@ -187,14 +187,13 @@ const toggleMobileSubmenu = (index: string) => {
 /* 帶有紫色交互的下拉菜單重寫 */
 :deep(.el-dropdown-menu__item a) {
   display: block;
-  padding: 0.6rem 1.2rem;
+  padding: 0.55rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
   color: #64748b; /* slate-500 */
   border-radius: 0.5rem;
   text-decoration: none;
   transition: all 0.2s;
-  margin: 4px;
 }
 :deep(.el-dropdown-menu__item a:hover) {
   background-color: #faf5ff; /* purple-50 */

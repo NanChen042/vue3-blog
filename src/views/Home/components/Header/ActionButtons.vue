@@ -68,7 +68,7 @@
         <template #dropdown>
           <el-dropdown-menu class="p-1.5 min-w-[160px] bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl dark:shadow-2xl">
             <el-dropdown-item class="custom-dropdown-item">{{ $t('header.profile') }}</el-dropdown-item>
-            <el-dropdown-item class="custom-dropdown-item">{{ $t('header.settings') }}</el-dropdown-item>
+            <el-dropdown-item class="custom-dropdown-item" @click="router.push('/settings')">{{ $t('header.settings') }}</el-dropdown-item>
             <div class="my-1 border-t border-slate-100 dark:border-slate-800/80"></div>
             <el-dropdown-item @click="handleLogout" class="custom-dropdown-item !text-rose-500 hover:!bg-rose-50 dark:hover:!bg-rose-500/10 transition-colors">{{ $t('header.logout') }}</el-dropdown-item>
           </el-dropdown-menu>
@@ -202,11 +202,12 @@ const apps = [
 }
 
 /* ----------------------------------------------------
-   自定义 Dropdown Menu Item 样式 (与 NavMenu 保持一致的紫色交互)
+   自定义 Dropdown Menu Item 样式
    ---------------------------------------------------- */
 :deep(.el-dropdown-menu__item) {
   padding: 0 !important;
   background-color: transparent !important;
+  margin: 0 !important;
 }
 :deep(.el-dropdown-menu__item:hover),
 :deep(.el-dropdown-menu__item:focus) {
@@ -216,14 +217,13 @@ const apps = [
 
 :deep(.custom-dropdown-item) {
   display: block;
-  padding: 0.55rem 1rem;
+  padding: 0.6rem 0.875rem;
   font-size: 0.875rem;
   font-weight: 500;
   color: #64748b; /* slate-500 */
-  border-radius: 0.5rem;
+  border-radius: 0.625rem;
   text-decoration: none;
   transition: all 0.2s;
-  margin: 2px 4px;
 }
 :deep(.custom-dropdown-item:hover) {
   background-color: #faf5ff !important; /* purple-50 */

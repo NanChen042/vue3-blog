@@ -3,6 +3,10 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
+    redirect: "/home",
+  },
+  {
+    path: "/",
     component: () => import("../layouts/MainLayout.vue"),
     children: [
       {
@@ -44,6 +48,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "lab",
         name: "Lab",
         component: () => import("../views/Lab/Lab.vue"),
+      },
+      {
+        path: "settings",
+        name: "Settings",
+        component: () => import("../views/Settings/Settings.vue"),
       },
     ],
   },
