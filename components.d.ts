@@ -25,6 +25,7 @@ declare module 'vue' {
     ElMain: typeof import('element-plus/es')['ElMain']
     ElPopover: typeof import('element-plus/es')['ElPopover']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    FallingPattern: typeof import('./src/components/ui/FallingPattern.vue')['default']
     IconSwitch: typeof import('./src/components/IconSwitch.vue')['default']
     MobileDrawer: typeof import('./src/components/MobileDrawer.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
