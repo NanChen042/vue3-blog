@@ -1,1 +1,0 @@
-import{D as e,Lt as t,S as n,W as r,y as i}from"./vue.runtime.esm-bundler-BrEc99Ql.js";var a={class:`p-8`},o={class:`text-2xl font-bold`},s=e({name:`Blog`,__name:`Blog`,setup(e){return(e,s)=>(r(),n(`div`,a,[i(`h1`,o,t(e.$t(`nav.blog`)),1),s[0]||=i(`p`,{class:`mt-4 text-slate-600 dark:text-slate-400`},`Placeholder for Blog page Content.`,-1)]))}});export{s as default};
