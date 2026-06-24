@@ -38,21 +38,57 @@ export const recentPosts: Post[] = [
   }
 ];
 
+import { NAV_DATA } from '@/views/Tools/data';
+import { gamesData } from '@/data/games';
+
+import type { Component } from 'vue';
+import { 
+  HardwareChipOutline, 
+  TerminalOutline, 
+  ColorPaletteOutline, 
+  VideocamOutline, 
+  PieChartOutline, 
+  ImagesOutline 
+} from '@vicons/ionicons5';
+
 export interface ToolCategory {
   name: string;
-  icon: string;
+  icon: Component;
   count: number;
   color: string;
 }
 
-export const toolCategories: ToolCategory[] = [
-  { name: '前端框架', icon: '⚡', count: 12, color: 'indigo' },
-  { name: '开发工具', icon: '🔧', count: 8, color: 'blue' },
-  { name: '样式资源', icon: '🎨', count: 15, color: 'violet' },
-  { name: 'AI 工具', icon: '🤖', count: 6, color: 'emerald' },
-  { name: '可视化', icon: '📊', count: 9, color: 'amber' },
-  { name: 'API 服务', icon: '🔌', count: 7, color: 'rose' }
+// Automatically sync from actual Tools data
+const colors = ['indigo', 'blue', 'violet', 'emerald', 'amber', 'rose', 'fuchsia', 'cyan'];
+const icons = [
+  HardwareChipOutline, 
+  TerminalOutline, 
+  ColorPaletteOutline, 
+  VideocamOutline, 
+  PieChartOutline, 
+  ImagesOutline
 ];
+
+export const toolCategories: ToolCategory[] = NAV_DATA.slice(0, 6).map((cat, index) => {
+  let displayName = cat.title.includes('.') ? cat.title.split('.').pop() || cat.title : cat.title;
+  
+  // Create mapping to match user's exact preferred names
+  const nameMap: Record<string, string> = {
+    'frontend': '前端框架',
+    'dev': 'Dev',
+    'css': 'Css',
+    'animation': 'Animation',
+    'visual': 'Visual',
+    'design': '设计资源'
+  };
+
+  return {
+    name: nameMap[displayName] || (displayName.charAt(0).toUpperCase() + displayName.slice(1)),
+    icon: icons[index % icons.length],
+    count: cat.items.length,
+    color: colors[index % colors.length]
+  };
+});
 
 export interface AIModel {
   name: string;
@@ -72,8 +108,9 @@ export interface GameStat {
   value: string;
 }
 
+// Automatically sync from actual Games data
 export const gameStats: GameStat[] = [
-  { label: '游戏数量', value: '24+' },
+  { label: '游戏数量', value: `${gamesData.length} 款` },
   { label: '总游玩次数', value: '12.5k' },
-  { label: '开发者', value: '3' }
+  { label: '开发者', value: '1' }
 ];

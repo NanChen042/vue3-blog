@@ -160,13 +160,14 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/store/auth';
 import { useI18n } from 'vue-i18n';
 import { login } from '@/api/user';
-import { ElMessage } from 'element-plus';
+import { useMessage } from 'naive-ui';
 
 defineOptions({ name: 'Login' });
 
 const router = useRouter();
 const authStore = useAuthStore();
 const { t } = useI18n();
+const message = useMessage();
 
 const loginForm = ref({
   username: '',
@@ -185,10 +186,10 @@ const handleLogin = async () => {
     authStore.setToken(res.data.token);
     authStore.setUserInfo(res.data.userInfo);
 
-    ElMessage.success(t('login.sign_in') + ' Success');
+    message.success(t('login.sign_in') + ' Success');
     router.back();
   } catch (err: any) {
-    ElMessage.error(err.message || t('login.login_failed'));
+    message.error(err.message || t('login.login_failed'));
   } finally {
     loading.value = false;
   }

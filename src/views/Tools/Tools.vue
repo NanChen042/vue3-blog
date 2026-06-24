@@ -1,11 +1,12 @@
 <template>
-  <div class="bg-[#fafafa] dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 selection:bg-indigo-500/30">
+  <div class="bg-[#fafafa] dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 selection:bg-purple-500/30">
     <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex items-start">
       
-      <aside class="hidden lg:flex flex-col w-[260px] shrink-0 sticky top-0 h-[calc(100vh-144px)] pt-12 pb-8 border-r border-zinc-200/60 dark:border-white/5 pr-6">
-        <div class="mb-8 px-3">
-          <h2 class="text-sm font-bold tracking-[0.2em] uppercase text-zinc-400 dark:text-zinc-500">
-            Navigation
+      <aside class="hidden lg:flex flex-col w-[260px] shrink-0 sticky top-[24px] h-[calc(100vh-144px)] pt-6 pb-8 border-r border-zinc-200/60 dark:border-white/5 pr-6 self-start">
+        <div class="mb-8 px-3 flex items-center gap-2.5">
+          <div class="w-1.5 h-4 bg-purple-500 rounded-full shadow-[0_0_8px_rgba(168,85,247,0.5)]"></div>
+          <h2 class="text-[15px] font-bold text-zinc-800 dark:text-zinc-100 tracking-wide">
+            发现工具
           </h2>
         </div>
         
@@ -28,15 +29,15 @@
           </p>
         </header>
 
-        <div class="space-y-20">
+        <div class="space-y-12">
           <section
             v-for="category in NAV_DATA"
             :key="category.title"
             :data-category="category.title"
             class="category-section"
           >
-            <div class="flex items-center gap-4 mb-8">
-              <h2 class="text-2xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100">
+            <div class="flex items-center gap-4 mb-5">
+              <h2 class="text-xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100">
                 {{ $t(category.title) || category.title }}
               </h2>
               <div class="flex-1 h-[1px] bg-gradient-to-r from-zinc-200 to-transparent dark:from-white/10"></div>
@@ -45,7 +46,7 @@
               </span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
               <ToolCard 
                 v-for="item in category.items" 
                 :key="item.title" 
@@ -124,8 +125,12 @@ const handleScroll = () => {
 };
 
 onMounted(() => {
-  // 获取我们在 MainLayout 里面定义的滚动容器
-  scrollContainer = document.getElementById('main-scroll-container');
+  // 获取我们在 MainLayout 里面定义的滚动容器，精确匹配 Naive UI 内部的滚动容器
+  scrollContainer = document.querySelector('#main-scroll-container .n-layout-scroll-container') as HTMLElement;
+  if (!scrollContainer) {
+    scrollContainer = document.getElementById('main-scroll-container');
+  }
+  
   if (scrollContainer) {
     scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // 初始化计算

@@ -52,6 +52,15 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("../views/Lab/Lab.vue"),
       },
       {
+        path: "doc",
+        redirect: "/doc/ai-agent-tutorial",
+      },
+      {
+        path: "doc/:id",
+        name: "Doc",
+        component: () => import("../views/Doc/Doc.vue"),
+      },
+      {
         path: "settings",
         name: "Settings",
         meta: { requiresAuth: true },

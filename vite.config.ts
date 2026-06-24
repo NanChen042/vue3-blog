@@ -1,5 +1,8 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue';
+import Markdown from 'unplugin-vue-markdown/vite';
+import markdownItHighlightjs from 'markdown-it-highlightjs';
+import highlightjs from 'highlight.js';
 import path from 'path'
 // 模块自动化导入
 import ViteAutoImport from 'unplugin-auto-import/vite'
@@ -7,18 +10,34 @@ import tailwindcss from '@tailwindcss/vite'
 
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
   base: process.env.NODE_ENV === 'production' ? "/vue3-blog" : "/",
   // base: "/vue3-blog",
-  plugins: [vue(),
-  tailwindcss(),
+  plugins: [
+    Markdown({
+      markdownItOptions: {
+        html: true,
+        linkify: true,
+        typographer: true,
+      },
+      markdownItSetup(md) {
+        // 注册 vue 为 xml 的别名，以支持 Vue 代码块的高亮
+        highlightjs.registerAliases('vue', { languageName: 'xml' });
+        md.use(markdownItHighlightjs, { inline: false, hljs: highlightjs });
+      },
+      wrapperClasses: 'markdown-body prose dark:prose-invert max-w-none', // Automatic typography
+    }),
+    vue({
+      include: [/\.vue$/, /\.md$/], // <-- IMPORTANT: let vue parse markdown files
+    }),
+    tailwindcss(),
   AutoImport({
-    resolvers: [ElementPlusResolver()],
+    resolvers: [NaiveUiResolver()],
   }),
   Components({
-    resolvers: [ElementPlusResolver()],
+    resolvers: [NaiveUiResolver()],
   }),
 
   ViteAutoImport({

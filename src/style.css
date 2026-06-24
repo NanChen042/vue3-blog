@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -55,19 +56,170 @@ html, body {
   --el-border-color: var(--slate-200);
   --el-fill-color-blank: #ffffff;
 }
-
-.dark {
-  --el-bg-color: var(--slate-950);
-  --el-bg-color-overlay: var(--slate-900);
-  --el-text-color-primary: var(--slate-100);
-  --el-border-color: var(--slate-800);
-  --el-fill-color-blank: var(--slate-900);
-  
-  --el-text-color-regular: var(--slate-400);
-  --el-text-color-secondary: var(--slate-500);
-  --el-border-color-light: var(--slate-800);
-  --el-border-color-lighter: var(--slate-800);
+* {
+  box-sizing: border-box;
 }
+
+/* View Transition API styles for theme flip */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+.dark::view-transition-old(root) {
+  z-index: 9999;
+}
+.dark::view-transition-new(root) {
+  z-index: 1;
+}
+
+/* Suppress transitions during theme flip to avoid flicker */
+.no-transition,
+.no-transition * {
+  transition: none !important;
+}
+
+/* NavMenu Popper Styles - Global to affect body-injected elements */
+.custom-dropdown-popper {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.custom-dropdown-popper .el-dropdown-menu {
+  min-width: 140px;
+  padding: 0.375rem !important;
+  border-radius: 0.875rem !important;
+  border: 1px solid #e2e8f0 !important; /* slate-200 */
+  background-color: #ffffff !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: 0 8px 30px -8px rgba(0, 0, 0, 0.12), 0 4px 12px -4px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Force reset inherited purple color from active nav button */
+.custom-dropdown-popper .el-dropdown-menu__item {
+  color: #475569 !important; /* slate-600 */
+}
+.custom-dropdown-popper .el-dropdown-menu__item a {
+  color: #475569 !important; /* slate-600 */
+}
+.custom-dropdown-popper .el-dropdown-menu__item a:hover {
+  background-color: #f5f3ff !important; /* purple-50 */
+  color: #7c3aed !important; /* purple-600 */
+}
+.custom-dropdown-popper .el-dropdown-menu__item a.is-active {
+  background-color: #f5f3ff !important;
+  color: #7c3aed !important;
+}
+
+.dark .custom-dropdown-popper .el-dropdown-menu {
+  background-color: #0f172a !important;
+  border-color: #1e293b !important; /* slate-800 */
+  box-shadow: 0 8px 30px -8px rgba(0, 0, 0, 0.5), 0 4px 12px -4px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Dark mode router-link color within dropdown */
+.dark .custom-dropdown-popper .el-dropdown-menu__item,
+.dark .custom-dropdown-popper .el-dropdown-menu__item a {
+  color: #94a3b8 !important; /* slate-400 */
+}
+.dark .custom-dropdown-popper .el-dropdown-menu__item a:hover,
+.dark .custom-dropdown-popper .el-dropdown-menu__item a.is-active {
+  background-color: rgba(124, 58, 237, 0.15) !important;
+  color: #a78bfa !important; /* violet-400 */
+}
+
+/* Mega Menu Popper */
+.mega-menu-popper {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.mega-menu-popper > .el-popper__content {
+  padding: 0px !important;
+  border-radius: 1.5rem !important;
+  border: 1px solid #e2e8f0 !important;
+  background-color: #ffffff !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15), 0 5px 15px -5px rgba(0, 0, 0, 0.1) !important;
+  overflow: hidden !important;
+}
+
+.dark .mega-menu-popper > .el-popper__content {
+  background-color: #0f172a !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 15px 50px -12px rgba(0, 0, 0, 0.6), 0 8px 18px -6px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Ensure no default menu padding in mega menu */
+@import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #7c3aed;
+  
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+  --slate-950: #020617;
+}
+
+/* Custom global styles */
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light;
+  
+  --bg-page: var(--slate-50);
+  --bg-page-rgb: 248, 250, 252;
+  --text-page: var(--slate-900);
+  --border-page: var(--slate-200);
+}
+
+html.dark {
+  color-scheme: dark;
+  --bg-page: var(--slate-950);
+  --bg-page-rgb: 2, 6, 23;
+  --text-page: var(--slate-50);
+  --border-page: var(--slate-800);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  min-width: 320px;
+  background-color: var(--bg-page);
+  color: var(--text-page);
+}
+
+#app {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
 
 /* Global styles */
 * {
@@ -183,4 +335,96 @@ html, body {
   border: none !important;
 }
 
+/* NavMenu sub-menu styles (el-menu--popup) */
+.custom-menu-popper {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.custom-menu-popper .el-menu--popup {
+  min-width: 140px;
+  padding: 0.375rem !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08), 0 4px 12px -4px rgba(0, 0, 0, 0.04) !important;
+}
+.custom-menu-popper .el-menu-item {
+  color: #475569 !important;
+  border-radius: 8px !important;
+  margin-bottom: 2px;
+  height: 38px !important;
+  line-height: 38px !important;
+  background-color: transparent !important;
+  border-bottom: none !important;
+}
+.custom-menu-popper .el-menu-item:hover,
+.custom-menu-popper .el-menu-item.is-active {
+  background-color: rgba(147, 51, 234, 0.06) !important;
+  color: #7c3aed !important;
+}
+.dark .custom-menu-popper .el-menu--popup {
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  border-color: rgba(30, 41, 59, 0.8) !important;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5), 0 4px 12px -4px rgba(0, 0, 0, 0.3) !important;
+}
+.dark .custom-menu-popper .el-menu-item {
+  color: #94a3b8 !important;
+}
+.dark .custom-menu-popper .el-menu-item:hover,
+.dark .custom-menu-popper .el-menu-item.is-active {
+  background-color: rgba(168, 85, 247, 0.1) !important;
+  color: #c084fc !important;
+}
 
+/* ActionButtons global dropdown styles (matte-dropdown) */
+.matte-dropdown.el-popper {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.matte-dropdown .el-dropdown-menu {
+  padding: 0.375rem !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08), 0 4px 12px -4px rgba(0, 0, 0, 0.04) !important;
+}
+.dark .matte-dropdown .el-dropdown-menu {
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  border-color: rgba(30, 41, 59, 0.8) !important;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5), 0 4px 12px -4px rgba(0, 0, 0, 0.3) !important;
+}
+.matte-dropdown .custom-dropdown-item {
+  display: flex !important;
+  align-items: center !important;
+  height: 38px !important;
+  line-height: 38px !important;
+  padding: 0 0.75rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  color: #64748b !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  transition: all 0.2s !important;
+  background-color: transparent !important;
+  margin-bottom: 2px !important;
+}
+.matte-dropdown .custom-dropdown-item:last-child {
+  margin-bottom: 0 !important;
+}
+.matte-dropdown .custom-dropdown-item:hover {
+  background-color: rgba(147, 51, 234, 0.06) !important;
+  color: #9333ea !important;
+}
+.dark .matte-dropdown .custom-dropdown-item {
+  color: #94a3b8 !important;
+}
+.dark .matte-dropdown .custom-dropdown-item:hover {
+  background-color: rgba(168, 85, 247, 0.1) !important;
+  color: #c084fc !important;
+}

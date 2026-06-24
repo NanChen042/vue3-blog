@@ -103,11 +103,16 @@ const durationStr = computed(() => `${props.duration}s`);
 
 <template>
     <div :class="cn('relative h-full w-full p-1 overflow-hidden transition-opacity duration-200', props.class)">
-        <div class="falling-animation relative w-full h-full z-0" :style="{
-            backgroundColor: props.backgroundColor,
-            backgroundImage: backgroundImage,
-            backgroundSize: backgroundSizes,
-        }" />
+        <!-- Rotated Wrapper for Diagonal Meteor Shower -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] -rotate-[30deg] z-0">
+            <div class="falling-animation relative w-full h-full" :style="{
+                backgroundColor: props.backgroundColor,
+                backgroundImage: backgroundImage,
+                backgroundSize: backgroundSizes,
+            }" />
+        </div>
+        
+        <!-- Grid Overlay (Unrotated to keep grid perfect) -->
         <div class="absolute inset-0 z-1 dark:brightness-600 pointer-events-none" :style="{
             backdropFilter: `blur(${props.blurIntensity})`,
             backgroundImage: `radial-gradient(circle at 50% 50%, transparent 0, transparent 2px, ${props.backgroundColor} 2px)`,

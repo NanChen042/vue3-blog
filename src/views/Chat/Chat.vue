@@ -36,7 +36,7 @@
           <div class="flex items-start gap-3 p-3.5">
             <!-- Avatar -->
             <div class="relative shrink-0">
-              <el-avatar :size="44" :src="persona.avatar" class="border-2" :class="personaBorderClass(persona.color)" />
+              <n-avatar round :size="44" :src="persona.avatar" class="border-2" :class="personaBorderClass(persona.color)" />
               <div class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-zinc-900" :class="personaDotColor(persona.color)"></div>
             </div>
 
@@ -118,7 +118,7 @@
         <!-- Chat Header -->
         <header class="h-16 shrink-0 border-b border-zinc-200/60 dark:border-white/5 flex items-center justify-between px-6 bg-white/60 dark:bg-[#050505]/60 backdrop-blur-xl z-20 absolute top-0 w-full transition-colors">
           <div class="flex items-center gap-3">
-            <el-avatar v-if="activeMode === 'ai'" :size="32" :src="activePersona?.avatar" class="border border-zinc-200 dark:border-zinc-700" />
+            <n-avatar round v-if="activeMode === 'ai'" :size="32" :src="activePersona?.avatar" class="border border-zinc-200 dark:border-zinc-700" />
             <div v-else class="w-8 h-8 rounded-lg bg-linear-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold text-sm">#</div>
             <h2 class="font-bold text-base text-zinc-800 dark:text-zinc-100">
               {{ activeMode === 'ai' ? (locale === 'zh' ? activePersona?.nameZh : activePersona?.name) : activeRoomName }}
@@ -154,8 +154,8 @@
                :class="msg.isSelf ? 'ml-auto flex-row-reverse' : ''">
 
             <!-- Avatar -->
-            <el-avatar v-if="!msg.isSelf" :size="34" :src="msg.avatar" class="shrink-0 border border-zinc-200 dark:border-zinc-800" />
-            <el-avatar v-else :size="34" :src="msg.avatar" class="shrink-0" :class="activeMode === 'ai' ? 'border-2 border-indigo-200 dark:border-indigo-800' : 'border border-zinc-200 dark:border-zinc-800'" />
+            <n-avatar round v-if="!msg.isSelf" :size="34" :src="msg.avatar" class="shrink-0 border border-zinc-200 dark:border-zinc-800" />
+            <n-avatar round v-else :size="34" :src="msg.avatar" class="shrink-0" :class="activeMode === 'ai' ? 'border-2 border-indigo-200 dark:border-indigo-800' : 'border border-zinc-200 dark:border-zinc-800'" />
 
             <div class="flex flex-col gap-1 min-w-0" :class="msg.isSelf ? 'items-end' : 'items-start'">
               <div class="flex items-center gap-2">
@@ -179,7 +179,7 @@
 
           <!-- Thinking indicator -->
           <div v-if="isAiThinking && !streamingMessageId" class="flex gap-3 max-w-3xl">
-            <el-avatar :size="34" :src="activePersona?.avatar" class="shrink-0 border border-zinc-200 dark:border-zinc-800" />
+            <n-avatar round :size="34" :src="activePersona?.avatar" class="shrink-0 border border-zinc-200 dark:border-zinc-800" />
             <div class="px-4 py-3 bg-white dark:bg-zinc-800/90 rounded-2xl rounded-tl-[6px] border border-zinc-100 dark:border-zinc-700/50 shadow-sm">
               <div class="flex items-center gap-1.5">
                 <span class="text-[12px] text-zinc-500 dark:text-zinc-400">{{ $t('chat.thinking') }}</span>
@@ -267,9 +267,12 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 import { useAuthStore } from '@/store/auth';
 import { useI18n } from 'vue-i18n';
-import { ElMessage } from 'element-plus';
+import { useMessage } from 'naive-ui';
+import api from '@/api/api';
 import { createChatCompletionStream } from '@/api/chat';
 import { aiPersonas } from '@/data/ai-personas';
 import type { AIPersona } from '@/data/ai-personas';
@@ -375,7 +378,7 @@ const handleGlobalClick = async (e: MouseEvent) => {
         setTimeout(() => { span.textContent = originalText; }, 2000);
       }
     } catch (err) {
-      ElMessage.error(t('chat.api_error_default'));
+      message.error(t('chat.api_error_default'));
     }
   }
 };
@@ -456,7 +459,7 @@ const clearHistory = () => {
 
 const createRoom = () => {
   if (!authStore.isLoggedIn) {
-    ElMessage.warning(t('chat.must_login'));
+    message.warning(t('chat.must_login'));
     return;
   }
   const name = window.prompt(t('chat.enter_room_name'));
@@ -474,7 +477,7 @@ const createRoom = () => {
 const sendMessage = async () => {
   if (!composeText.value.trim() || !activeSession.value) return;
   if (activeMode.value === 'live' && !authStore.isLoggedIn) {
-    ElMessage.error(t('chat.login_req_toast'));
+    message.error(t('chat.login_req_toast'));
     return;
   }
 
@@ -523,7 +526,7 @@ const handleAiResponse = async (userContent: string, selfAvatar: string, selfNam
   const apiKey = localStorage.getItem(API_KEY_STORAGE);
   if (!apiKey) {
     isSending.value = false;
-    ElMessage.error(t('chat.api_not_configured'));
+    message.error(t('chat.api_not_configured'));
     return;
   }
 

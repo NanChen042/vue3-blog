@@ -6,22 +6,17 @@ import vuetyped from 'vue3typed'
 
 import { createPinia } from 'pinia'
 
-import 'element-plus/dist/index.css'
+import 'vfonts/Lato.css'
+import 'vfonts/FiraCode.css'
 import './style.css'
 
 import router from "./router/index"
-import ElementPlus from 'element-plus'
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import naive from 'naive-ui'
 import i18n from './i18n'
 import { useThemeStore } from './store/theme'
 
 const pinia = createPinia();
 const app = createApp(App)
-
-// 注册所有图标
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-  app.component(key, component)
-}
 
 app.use(Particles, {
   init: async (engine: any) => {
@@ -31,7 +26,7 @@ app.use(Particles, {
   .use(vuetyped)
   .use(router)
   .use(pinia)
-  .use(ElementPlus)
+  .use(naive)
   .use(i18n)
   .mount('#app')
 

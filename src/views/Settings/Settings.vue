@@ -151,7 +151,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { ElMessage } from 'element-plus';
+import { useMessage } from 'naive-ui';
 import { useI18n } from 'vue-i18n';
 import { createChatCompletion } from '@/api/chat';
 
@@ -159,6 +159,7 @@ defineOptions({ name: 'Settings' });
 
 const router = useRouter();
 const { t } = useI18n();
+const message = useMessage();
 
 const API_KEY_STORAGE = 'chat_api_key';
 const MODEL_STORAGE = 'chat_model';
@@ -216,7 +217,7 @@ const handleTest = async () => {
 
     const reply = res.choices[0]?.message?.content?.trim();
     if (reply) {
-      ElMessage.success(`连接成功！模型回复: ${reply}`);
+      message.success(`连接成功！模型回复: ${reply}`);
     } else {
       apiError.value = t('settings.model_empty_error');
     }

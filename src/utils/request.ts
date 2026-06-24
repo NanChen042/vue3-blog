@@ -1,6 +1,8 @@
 import axios from 'axios';
-import { ElMessage } from 'element-plus';
+import { createDiscreteApi } from 'naive-ui';
 import type { ApiResponse } from '@/types';
+
+const { message: nMessage } = createDiscreteApi(['message']);
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
@@ -23,13 +25,13 @@ request.interceptors.response.use(
     const res = response.data as ApiResponse;
     // Assuming the API returns a standard wrapper like { code: 200, data: ..., message: "..." }
     if (res.code && res.code !== 200) {
-      ElMessage.error(res.message || 'Error executing request');
+      nMessage.error(res.message || 'Error executing request');
       return Promise.reject(new Error(res.message || 'Error'));
     }
     return res as any;
   },
   error => {
-    ElMessage.error(error.message || 'Network Error');
+    nMessage.error(error.message || 'Network Error');
     return Promise.reject(error);
   }
 );

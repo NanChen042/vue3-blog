@@ -1,5 +1,5 @@
 <template>
-  <el-container class="min-h-screen flex flex-col items-center justify-center" style="background-color: var(--bg-page); color: var(--text-page)">
+  <n-layout class="min-h-screen flex flex-col items-center justify-center" style="background-color: var(--bg-page); color: var(--text-page)">
     <div class="text-center px-4 relative">
       <!-- Background Ornament -->
       <div class="absolute inset-0 -z-10 bg-purple-500/10 blur-3xl rounded-full scale-150 transform -translate-y-12"></div>
@@ -22,7 +22,7 @@
         </router-link>
       </div>
     </div>
-  </el-container>
+  </n-layout>
 </template>
 
 <script setup lang="ts">

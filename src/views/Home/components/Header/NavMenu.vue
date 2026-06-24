@@ -1,40 +1,93 @@
 <template>
-  <el-menu
-    :mode="mode"
-    :default-active="activeIndex"
-    router
-    class="border-none bg-transparent w-full"
-    :class="mode === 'horizontal' ? 'h-full flex items-center justify-center' : 'pt-2'"
-    @select="handleSelect"
-    :ellipsis="false"
-  >
-    <template v-for="item in menuData" :key="item.index">
-      <el-sub-menu v-if="item.children" :index="item.index">
-        <template #title>
-          <span class="font-medium text-[14px]">{{ $t(item.labelKey) }}</span>
-        </template>
-        <el-menu-item v-for="child in item.children" :key="child.path" :index="child.path">
-          <div class="flex items-center gap-3 py-1">
-            <component :is="child.icon" class="w-4 h-4 text-purple-500" v-if="child.icon" />
-            <div class="flex flex-col leading-tight">
-              <span class="font-medium">{{ $t(child.labelKey) }}</span>
-              <span v-if="child.descKey" class="text-[11px] opacity-60 mt-0.5">{{ $t(child.descKey) }}</span>
+  <div class="nav-menu-wrapper w-full h-full flex" :class="mode === 'horizontal' ? 'justify-center items-center' : ''">
+    
+    <!-- Desktop Horizontal Menu -->
+    <n-menu
+      v-if="mode === 'horizontal'"
+      :mode="mode"
+      :value="activeIndex"
+      :options="menuOptions"
+      @update:value="handleSelect"
+      class="border-none bg-transparent custom-n-menu"
+      :root-indent="24"
+    />
+
+    <!-- Mobile Vertical Menu (Custom Elegant Implementation) -->
+    <div v-else class="w-full flex flex-col gap-1 px-1 py-2">
+      <template v-for="item in mobileNavItems" :key="item.path">
+        
+        <!-- Parent with Children -->
+        <div v-if="item.children" class="mb-1">
+          <div 
+            class="flex items-center justify-between px-3 py-3 rounded-xl text-[15px] font-medium transition-colors select-none cursor-pointer"
+            :class="[
+              isChildActive(item) 
+                ? 'bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400' 
+                : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+            ]"
+            @click="toggleExpand(item.path)"
+          >
+            <div class="flex items-center gap-3">
+              <component v-if="item.icon" :is="item.icon" class="w-5 h-5 opacity-70" />
+              <span>{{ item.label }}</span>
+            </div>
+            <svg class="w-4 h-4 transition-transform duration-300 opacity-60" :class="{ 'rotate-180': expanded.includes(item.path) }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+          
+          <!-- Children wrapper -->
+          <div v-show="expanded.includes(item.path)" class="mt-1 flex flex-col gap-1 pl-3 relative overflow-hidden transition-all">
+            <div class="absolute left-[20px] top-2 bottom-2 w-px bg-zinc-200 dark:bg-zinc-800"></div>
+            <div 
+              v-for="child in item.children" 
+              :key="child.path"
+              class="relative flex items-center gap-3 pl-7 pr-4 py-2.5 rounded-xl text-sm transition-colors cursor-pointer"
+              :class="[
+                activeIndex === child.path 
+                  ? 'text-purple-600 dark:text-purple-400 font-bold bg-purple-50/50 dark:bg-purple-500/5' 
+                  : 'text-zinc-500 dark:text-zinc-400 font-medium hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
+              ]"
+              @click="handleNavigate(child.path)"
+            >
+              <div class="absolute left-[17px] w-[7px] h-[7px] rounded-full border-2 border-slate-50 dark:border-slate-950 transition-colors duration-300" :class="activeIndex === child.path ? 'bg-purple-500 z-10' : 'bg-zinc-300 dark:bg-zinc-700'"></div>
+              <span>{{ child.label }}</span>
             </div>
           </div>
-        </el-menu-item>
-      </el-sub-menu>
-
-      <el-menu-item v-else :index="item.path">
-        <span class="font-medium text-[14px]">{{ $t(item.labelKey) }}</span>
-      </el-menu-item>
-    </template>
-  </el-menu>
+        </div>
+        
+        <!-- Normal Link -->
+        <div 
+          v-else
+          class="flex items-center px-3 py-3 rounded-xl text-[15px] font-medium transition-colors cursor-pointer mb-1"
+          :class="[
+            activeIndex === item.path 
+              ? 'bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400' 
+              : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+          ]"
+          @click="handleNavigate(item.path)"
+        >
+          <div class="flex items-center gap-3">
+            <component v-if="item.icon" :is="item.icon" class="w-5 h-5 opacity-70" />
+            <span>{{ item.label }}</span>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed, markRaw } from "vue";
-import { useRoute } from "vue-router";
-import { Document, CollectionTag } from "@element-plus/icons-vue";
+import { h, computed, ref } from "vue";
+import { useRoute, useRouter, RouterLink } from "vue-router";
+import { useI18n } from 'vue-i18n';
+import type { MenuOption } from 'naive-ui';
+import { NIcon } from 'naive-ui';
+import { DocumentTextOutline, PricetagsOutline, ChevronDownOutline, HomeOutline, HardwareChipOutline, GameControllerOutline, ChatbubbleEllipsesOutline, FlaskOutline } from '@vicons/ionicons5';
+
+const { t } = useI18n();
+const route = useRoute();
+const router = useRouter();
 
 const props = defineProps({
   mode: {
@@ -46,82 +99,105 @@ const props = defineProps({
 const emit = defineEmits(["item-click"]);
 defineOptions({ name: "NavMenu" });
 
-const route = useRoute();
+function renderIcon(icon: any) {
+  return () => h(NIcon, { class: 'text-purple-500', size: 18 }, { default: () => h(icon) });
+}
 
-const menuData = [
-  { index: "1", labelKey: "nav.home", path: "/home" },
+// === Desktop Native n-menu Options ===
+const menuOptions = computed<MenuOption[]>(() => [
   {
-    index: "2",
-    labelKey: "nav.blog",
-    path: "/blog",
+    label: () => h(RouterLink, { to: '/home' }, { default: () => h('span', { class: 'font-medium text-[14px] px-1' }, t('nav.home')) }),
+    key: '/home',
+  },
+  {
+    label: () => h('span', { class: 'font-medium text-[14px] px-1 flex items-center gap-1 cursor-pointer' }, [
+      t('nav.blog'),
+      h(NIcon, { size: 14, class: 'opacity-60 transition-transform group-hover:rotate-180' }, { default: () => h(ChevronDownOutline) })
+    ]),
+    key: 'blog-parent',
     children: [
       {
-        index: "2-1",
-        labelKey: "nav.latest",
-        descKey: "blog.latest_desc",
-        path: "/blog",
-        icon: markRaw(Document),
+        label: () => h(RouterLink, { to: '/blog' }, { default: () => t('nav.latest') }),
+        key: '/blog',
+        icon: renderIcon(DocumentTextOutline)
       },
       {
-        index: "2-2",
-        labelKey: "nav.categories",
-        descKey: "blog.categories_desc",
-        path: "/categories",
-        icon: markRaw(CollectionTag),
-      },
-    ],
+        label: () => h(RouterLink, { to: '/categories' }, { default: () => t('nav.categories') }),
+        key: '/categories',
+        icon: renderIcon(PricetagsOutline)
+      }
+    ]
   },
-  { index: "3", labelKey: "nav.tools", path: "/tools" },
-  { index: "4", labelKey: "nav.games", path: "/games" },
-  { index: "5", labelKey: "nav.chat", path: "/chat" },
-  { index: "6", labelKey: "nav.lab", path: "/lab" },
-];
+  {
+    label: () => h(RouterLink, { to: '/tools' }, { default: () => h('span', { class: 'font-medium text-[14px] px-1' }, t('nav.tools')) }),
+    key: '/tools',
+  },
+  {
+    label: () => h(RouterLink, { to: '/games' }, { default: () => h('span', { class: 'font-medium text-[14px] px-1' }, t('nav.games')) }),
+    key: '/games',
+  },
+  {
+    label: () => h(RouterLink, { to: '/chat' }, { default: () => h('span', { class: 'font-medium text-[14px] px-1' }, t('nav.chat')) }),
+    key: '/chat',
+  },
+  {
+    label: () => h(RouterLink, { to: '/lab' }, { default: () => h('span', { class: 'font-medium text-[14px] px-1' }, t('nav.lab')) }),
+    key: '/lab',
+  }
+]);
+
+// === Custom Mobile Navigation Data ===
+const expanded = ref<string[]>(['blog-parent']); // Default expanded
+
+const mobileNavItems = computed(() => [
+  { path: '/home', label: t('nav.home'), icon: HomeOutline },
+  { 
+    path: 'blog-parent', 
+    label: t('nav.blog'), 
+    icon: DocumentTextOutline,
+    children: [
+      { path: '/blog', label: t('nav.latest') },
+      { path: '/categories', label: t('nav.categories') }
+    ]
+  },
+  { path: '/tools', label: t('nav.tools'), icon: HardwareChipOutline },
+  { path: '/games', label: t('nav.games'), icon: GameControllerOutline },
+  { path: '/chat', label: t('nav.chat'), icon: ChatbubbleEllipsesOutline },
+  { path: '/lab', label: t('nav.lab'), icon: FlaskOutline }
+]);
 
 const activeIndex = computed(() => {
   if (route.path === "/") return "/home";
-  
-  // Special handling for blog children so the parent active index logic matches
   if (route.path === "/categories") return "/categories";
-  
   return route.path;
 });
 
-const handleSelect = () => {
+const isChildActive = (item: any) => {
+  if (item.path === activeIndex.value) return true;
+  if (item.children) {
+    return item.children.some((child: any) => child.path === activeIndex.value);
+  }
+  return false;
+};
+
+const toggleExpand = (path: string) => {
+  if (expanded.value.includes(path)) {
+    expanded.value = expanded.value.filter(p => p !== path);
+  } else {
+    expanded.value.push(path);
+  }
+};
+
+const handleNavigate = (path: string) => {
+  router.push(path);
+  emit("item-click");
+};
+
+const handleSelect = (key: string) => {
   emit("item-click");
 };
 </script>
 
 <style scoped>
-:deep(.el-menu) {
-  --el-menu-bg-color: transparent;
-  --el-menu-hover-bg-color: rgba(147, 51, 234, 0.05); /* very light purple for hover */
-  --el-menu-active-color: #9333ea;
-  border-right: none !important;
-  border-bottom: none !important;
-}
-
-:deep(.el-menu--horizontal) {
-  border-bottom: none !important;
-}
-
-:deep(.el-menu-item), :deep(.el-sub-menu__title) {
-  background-color: transparent !important;
-  border-bottom: 2px solid transparent;
-}
-
-:deep(.el-menu--horizontal .el-menu-item.is-active) {
-  border-bottom: 2px solid #9333ea !important;
-  color: #9333ea !important;
-}
-
-.dark :deep(.el-menu) {
-  --el-menu-hover-bg-color: rgba(168, 85, 247, 0.1);
-  --el-menu-active-color: #c084fc;
-  --el-menu-text-color: #e2e8f0;
-}
-
-.dark :deep(.el-menu--horizontal .el-menu-item.is-active) {
-  border-bottom: 2px solid #c084fc !important;
-  color: #c084fc !important;
-}
+/* Scoped overrides if needed */
 </style>
