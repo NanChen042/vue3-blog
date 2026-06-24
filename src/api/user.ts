@@ -1,12 +1,13 @@
 // src/api/user.ts
 import request from '../utils/request';
+import type { ApiResponse } from '@/types';
 
 // Normally this would be: 
 // return request.post('/login', data);
 // But for simulation, we will mock the backend logic since the local backend router doesn't exist yet.
 
 export function login(data: any) {
-  return new Promise<{ code: number; data: any; message: string }>((resolve, reject) => {
+  return new Promise<ApiResponse<any>>((resolve, reject) => {
     setTimeout(() => {
       if (data.username === 'admin' && data.password === '123456') {
         resolve({

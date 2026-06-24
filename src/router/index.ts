@@ -42,16 +42,19 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "chat",
         name: "Chat",
+        meta: { requiresAuth: true },
         component: () => import("../views/Chat/Chat.vue"),
       },
       {
         path: "lab",
         name: "Lab",
+        meta: { requiresAuth: true },
         component: () => import("../views/Lab/Lab.vue"),
       },
       {
         path: "settings",
         name: "Settings",
+        meta: { requiresAuth: true },
         component: () => import("../views/Settings/Settings.vue"),
       },
     ],
@@ -76,6 +79,14 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+});
+
+router.beforeEach((to) => {
+  const token = localStorage.getItem('token');
+  if (to.meta.requiresAuth && !token) {
+    return '/login';
+  }
+  return true;
 });
 
 export default router

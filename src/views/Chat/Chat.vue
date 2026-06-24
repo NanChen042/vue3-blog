@@ -169,7 +169,8 @@
                      ? (activeMode === 'live' ? 'bg-emerald-500 text-white rounded-2xl rounded-tr-[6px]' : 'bg-indigo-500 text-white rounded-2xl rounded-tr-[6px]')
                      : 'bg-white dark:bg-zinc-800/90 text-zinc-800 dark:text-zinc-200 rounded-2xl rounded-tl-[6px] border border-zinc-100 dark:border-zinc-700/50'">
                 <!-- Streaming text -->
-                <span>{{ msg.content }}</span>
+                <div v-if="msg.isSelf" class="whitespace-pre-wrap break-words">{{ msg.content }}</div>
+                <div v-else class="chat-markdown break-words" v-html="md.render(msg.content)"></div>
                 <!-- Typing cursor for streaming -->
                 <span v-if="msg.isStreaming" class="inline-block w-1.5 h-3.5 ml-0.5 bg-current animate-pulse rounded-sm align-middle"></span>
               </div>
@@ -194,6 +195,15 @@
 
         <!-- Input Area -->
         <div class="p-4 bg-white/60 dark:bg-[#050505]/60 backdrop-blur-xl border-t border-zinc-200/60 dark:border-white/5 shrink-0 z-20 w-full transition-colors relative">
+          
+          <!-- Stop Button -->
+          <div v-if="activeMode === 'ai' && (isAiThinking || streamingMessageId)" class="flex justify-center absolute -top-12 left-0 right-0 z-30">
+            <button @click="stopGenerating" class="px-4 py-1.5 bg-zinc-800/80 dark:bg-zinc-200/80 hover:bg-zinc-900 dark:hover:bg-white text-white dark:text-zinc-900 text-xs font-semibold flex items-center gap-2 rounded-full shadow-lg backdrop-blur-md transition-all">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+              {{ locale === 'zh' ? '停止生成' : 'Stop Generating' }}
+            </button>
+          </div>
+
           <div v-if="activeMode === 'live' && !authStore.isLoggedIn" class="w-full py-4 text-center rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 backdrop-blur-md">
             <p class="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2">{{ $t('chat.login_required') }}</p>
             <button @click="router.push('/login')" class="px-5 py-2 inline-block bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-sm font-bold rounded-lg hover:opacity-90 transition-opacity shadow-sm">
@@ -255,7 +265,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick, watch, onMounted } from 'vue';
+import { ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/store/auth';
 import { useI18n } from 'vue-i18n';
@@ -263,6 +273,55 @@ import { ElMessage } from 'element-plus';
 import { createChatCompletionStream } from '@/api/chat';
 import { aiPersonas } from '@/data/ai-personas';
 import type { AIPersona } from '@/data/ai-personas';
+import MarkdownIt from 'markdown-it';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/atom-one-dark.css';
+
+const md = new MarkdownIt();
+
+md.renderer.rules.fence = (tokens, idx) => {
+  const token = tokens[idx];
+  const code = token.content.trim();
+  const lang = token.info.trim();
+  
+  let highlighted = md.utils.escapeHtml(code);
+  if (lang && hljs.getLanguage(lang)) {
+    try {
+      highlighted = hljs.highlight(code, { language: lang, ignoreIllegals: true }).value;
+    } catch (e) {}
+  }
+
+  return `
+    <div class="code-block-wrapper my-4 rounded-xl overflow-hidden bg-[#282c34] shadow-sm border border-zinc-700/50">
+      <div class="flex items-center justify-between px-4 py-2 bg-[#21252b] text-zinc-400 text-xs font-sans">
+        <span class="font-mono">${lang || 'text'}</span>
+        <button class="copy-btn flex items-center gap-1 hover:text-zinc-200 transition-colors" data-code="${encodeURIComponent(code)}">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          <span class="copy-text">Copy code</span>
+        </button>
+      </div>
+      <div class="p-4 overflow-x-auto text-[13px] leading-relaxed">
+        <pre class="hljs !bg-transparent !p-0 !m-0"><code class="language-${lang}">${highlighted}</code></pre>
+      </div>
+    </div>
+  `;
+};
+
+let activeAbortController: AbortController | null = null;
+
+const stopGenerating = () => {
+  if (activeAbortController) {
+    activeAbortController.abort();
+    activeAbortController = null;
+    isSending.value = false;
+    isAiThinking.value = false;
+    if (streamingMessageId.value && activeSession.value) {
+      const msgObj = messageHistory.value[activeSession.value.id]?.find(m => m.id === streamingMessageId.value);
+      if (msgObj) msgObj.isStreaming = false;
+      streamingMessageId.value = null;
+    }
+  }
+};
 
 defineOptions({ name: 'Chat' });
 
@@ -302,8 +361,32 @@ const API_KEY_STORAGE = 'chat_api_key';
 
 const hasApiKey = ref(false);
 
+const handleGlobalClick = async (e: MouseEvent) => {
+  const target = e.target as HTMLElement;
+  const copyBtn = target.closest('.copy-btn');
+  if (copyBtn) {
+    const code = decodeURIComponent(copyBtn.getAttribute('data-code') || '');
+    try {
+      await navigator.clipboard.writeText(code);
+      const span = copyBtn.querySelector('.copy-text');
+      if (span) {
+        const originalText = span.textContent;
+        span.textContent = locale.value === 'zh' ? '已复制！' : 'Copied!';
+        setTimeout(() => { span.textContent = originalText; }, 2000);
+      }
+    } catch (err) {
+      ElMessage.error(t('chat.api_error_default'));
+    }
+  }
+};
+
 onMounted(() => {
   hasApiKey.value = !!localStorage.getItem(API_KEY_STORAGE);
+  document.addEventListener('click', handleGlobalClick);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleGlobalClick);
 });
 
 const currentMessages = computed(() => {
@@ -461,7 +544,7 @@ const handleAiResponse = async (userContent: string, selfAvatar: string, selfNam
   messages.push({ role: 'user', content: userContent });
 
   // Add placeholder for streaming response
-  const streamingMsgId = Date.now();
+  const streamingMsgId = Date.now() + Math.random();
   messageHistory.value[activeSession.value.id].push({
     id: streamingMsgId,
     sender: locale.value === 'zh' ? persona.nameZh : persona.name,
@@ -478,6 +561,7 @@ const handleAiResponse = async (userContent: string, selfAvatar: string, selfNam
   scrollToBottom();
 
   let fullContent = '';
+  activeAbortController = new AbortController();
 
   await new Promise<void>((resolve) => {
     createChatCompletionStream(
@@ -493,17 +577,24 @@ const handleAiResponse = async (userContent: string, selfAvatar: string, selfNam
         const msgObj = messageHistory.value[activeSession.value.id].find(m => m.id === streamingMsgId);
         if (msgObj) msgObj.isStreaming = false;
         streamingMessageId.value = null;
+        activeAbortController = null;
         resolve();
       },
       (err: any) => {
+        if (err.name === 'AbortError') {
+          resolve();
+          return;
+        }
         const msgObj = messageHistory.value[activeSession.value.id].find(m => m.id === streamingMsgId);
         if (msgObj) {
           msgObj.content = t('chat.api_error') + (err?.message || err?.response?.data?.error?.message || t('chat.api_error_default'));
           msgObj.isStreaming = false;
         }
         streamingMessageId.value = null;
+        activeAbortController = null;
         resolve();
-      }
+      },
+      activeAbortController.signal
     );
   });
 };
@@ -571,3 +662,35 @@ const personaCapClass = (color: string) => {
   return map[color] || 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400';
 };
 </script>
+
+<style>
+@reference "../../style.css";
+
+.chat-markdown {
+  @apply text-[14px] leading-relaxed;
+}
+.chat-markdown p {
+  @apply mb-2 last:mb-0;
+}
+.chat-markdown code {
+  @apply bg-zinc-100 dark:bg-zinc-700/50 px-1.5 py-0.5 rounded text-sm text-pink-500 dark:text-pink-400 font-mono;
+}
+.chat-markdown h1, .chat-markdown h2, .chat-markdown h3 {
+  @apply font-bold mt-4 mb-2;
+}
+.chat-markdown h1 { @apply text-lg; }
+.chat-markdown h2 { @apply text-base; }
+.chat-markdown h3 { @apply text-sm; }
+.chat-markdown ul {
+  @apply list-disc list-inside mb-2 pl-2;
+}
+.chat-markdown ol {
+  @apply list-decimal list-inside mb-2 pl-2;
+}
+.chat-markdown blockquote {
+  @apply border-l-4 border-indigo-500 pl-3 italic text-zinc-500 dark:text-zinc-400 my-2;
+}
+.chat-markdown a {
+  @apply text-indigo-500 hover:underline;
+}
+</style>

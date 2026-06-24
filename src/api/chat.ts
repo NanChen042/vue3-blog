@@ -56,49 +56,63 @@ export async function createChatCompletionStream(
   payload: ChatCompletionRequest,
   onChunk: (content: string) => void,
   onDone: () => void,
-  onError: (err: any) => void
+  onError: (err: any) => void,
+  signal?: AbortSignal
 ): Promise<void> {
   try {
-    const response = await axios.post(
-      `${SILICON_FLOW_BASE_URL}/chat/completions`,
-      { ...payload, stream: true },
-      {
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        responseType: 'stream',
-        timeout: 120000,
-      }
-    );
+    const response = await fetch(`${SILICON_FLOW_BASE_URL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ...payload, stream: true }),
+      signal,
+    });
 
-    const reader = response.data as unknown as ReadableStreamDefaultReader<Uint8Array>;
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(`Request failed with status ${response.status}: ${errText}`);
+    }
+
+    if (!response.body) {
+      throw new Error('Response body is missing.');
+    }
+
+    const reader = response.body.getReader();
     const decoder = new TextDecoder('utf-8');
     let buffer = '';
 
     const readChunk = async () => {
-      const { done, value } = await reader.read();
-      if (done) {
-        onDone();
-        return;
-      }
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop() || '';
+      try {
+        const { done, value } = await reader.read();
+        if (done) {
+          onDone();
+          return;
+        }
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
 
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed) continue;
-        if (trimmed === 'data: [DONE]') break;
-        if (!trimmed.startsWith('data: ')) continue;
-        const dataStr = trimmed.slice(6);
-        try {
-          const data = JSON.parse(dataStr);
-          const content = data.choices?.[0]?.delta?.content;
-          if (content) onChunk(content);
-        } catch {}
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed) continue;
+          if (trimmed === 'data: [DONE]') {
+            onDone();
+            return;
+          }
+          if (!trimmed.startsWith('data: ')) continue;
+          const dataStr = trimmed.slice(6);
+          try {
+            const data = JSON.parse(dataStr);
+            const content = data.choices?.[0]?.delta?.content;
+            if (content) onChunk(content);
+          } catch {}
+        }
+        readChunk();
+      } catch (err) {
+        onError(err);
       }
-      readChunk();
     };
 
     readChunk();

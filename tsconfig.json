@@ -7,7 +7,7 @@
     "skipLibCheck": true,
 
     /* Bundler mode */
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -21,8 +21,7 @@
     "noFallthroughCasesInSwitch": true,
     "outDir": "./dist", // 指定输出目录
     "alwaysStrict": true, // 在代码中注入'use strict'
-    "baseUrl": "./", // 解析非相对模块的基地址，默认是当前目录
-    "paths": { "@/*": ["src/*"] }, // 路径映射，相对于baseUrl
+    "paths": { "@/*": ["./src/*"] }, // 路径映射，相对于baseUrl
     "types": ["element-plus/global", "node", "axios"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],

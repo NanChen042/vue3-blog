@@ -92,7 +92,7 @@ export default {
     search_placeholder: 'Search games...',
     play_now: 'Play Now',
     how_to_play: 'How to Play',
-    intro: 'Introduction',
+    intro_title: 'Introduction',
     not_found: 'Game not found',
     return_games: 'Return to Games',
     demo_msg: 'This is a demo! In a real scenario, this game would load now.',

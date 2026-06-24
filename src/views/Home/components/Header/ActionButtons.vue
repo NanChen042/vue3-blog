@@ -111,7 +111,7 @@ const handleLogout = () => {
 const toggleTheme = (event: MouseEvent) => {
   // @ts-ignore
   const isAppearanceTransition =
-    document.startViewTransition &&
+    'startViewTransition' in document &&
     !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (!isAppearanceTransition) {

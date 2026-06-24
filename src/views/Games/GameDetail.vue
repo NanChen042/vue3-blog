@@ -101,9 +101,11 @@
         <!-- 游戏介绍 & 玩法 -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <section class="rounded-2xl bg-white/80 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/80 p-6 backdrop-blur-sm shadow-sm">
-            <h2 class="text-xs font-bold uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500 mb-4 flex items-center gap-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              {{ $t('games.intro') }}
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {{ $t('games.intro_title') }}
             </h2>
             <p class="text-[15px] text-zinc-600 dark:text-zinc-400 leading-relaxed">
               {{ locale === 'zh' && game.descriptionZh ? game.descriptionZh : game.description }}

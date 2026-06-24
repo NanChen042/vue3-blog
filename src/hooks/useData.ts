@@ -4,27 +4,21 @@
  * @LastEditTime: 2025-01-17 11:24:56
  * @Description:
  */
-import { randomText, ranInt } from "@/utils/index";
-import loadFail from "../assets/load-fail.png";
-
-export interface ItemInfo {
-  id: number
-  title: string
-  text: string
-  /** 图片路径 */
-  photo: string
-  /** 图片的宽度，前端获取图片信息之后设置 */
-  width?: number
-  /** 图片的高度，前端获取图片信息之后设置 */
-  height?: number
-  /**
-   * 当前节点的所在列的高度
-   * - 非列的总高度，只是调试用
-   */
-  currentColumnHeight?: number
+export function ranInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export type ItemList = Array<ItemInfo>;
+export function randomText(min: number, max: number) {
+  const len = ranInt(min, max);
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ';
+  let result = '';
+  for (let i = 0; i < len; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+import loadFail from "../assets/load-fail.png";
+import type { ItemInfo, ItemList } from "@/types";
 
 let id = 0;
 
