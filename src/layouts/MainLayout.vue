@@ -5,7 +5,7 @@
       <Header />
     </n-layout-header>
 
-    <n-layout-content id="main-scroll-container" position="absolute" style="top: 64px; bottom: 80px;" class="bg-transparent scroll-smooth">
+    <n-layout-content id="main-scroll-container" position="absolute" :style="{ top: '64px', bottom: showFooter ? '80px' : '0px' }" class="bg-transparent scroll-smooth">
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
           <component :is="Component" />
@@ -13,7 +13,7 @@
       </router-view>
     </n-layout-content>
 
-    <n-layout-footer position="absolute" style="height: 80px; bottom: 0;" class="flex items-center bg-transparent" bordered>
+    <n-layout-footer v-if="showFooter" position="absolute" style="height: 80px; bottom: 0;" class="flex items-center bg-transparent" bordered>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div class="flex flex-col md:flex-row justify-between items-center gap-4">
           <div class="flex items-center gap-2 cursor-pointer group hover:opacity-80 transition-opacity">
@@ -55,9 +55,14 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 import Header from "../views/Home/components/Header/Header.vue";
 
 defineOptions({ name: "MainLayout" });
+
+const route = useRoute();
+const showFooter = computed(() => !['/chat', '/settings'].includes(route.path));
 </script>
 
 <style scoped>
