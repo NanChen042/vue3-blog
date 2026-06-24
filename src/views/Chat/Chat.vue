@@ -594,7 +594,7 @@ const handleAiResponse = async (userContent: string, selfAvatar: string, selfNam
         activeAbortController = null;
         resolve();
       },
-      activeAbortController.signal
+      activeAbortController!.signal
     );
   });
 };
