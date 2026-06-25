@@ -13,7 +13,7 @@ import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? "/vue3-blog" : "/",
+  base: process.env.CF_PAGES ? "/" : (process.env.NODE_ENV === 'production' ? "/vue3-blog" : "/"),
   // base: "/vue3-blog",
   plugins: [
     Markdown({
