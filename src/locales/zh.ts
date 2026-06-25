@@ -37,34 +37,43 @@ export default {
   // --- 新增的主页翻译区块 ---
   home: {
     hero: {
-      badge: 'v2.0 · 更新了一点',
+      badge: 'Hi, 欢迎来到我的主页',
       title_prefix: '一些尝试',
       title_highlight: 'Just Trying Things',
-      description: '不定期折腾：有用的、没用的、有趣的都放这。',
-      primary_btn: '进去逛逛',
-      secondary_btn: '随便看看'
+      description: '分享日常开发与折腾的记录，有实用工具，也有天马行空的尝试。',
+      primary_btn: '开始阅读',
+      secondary_btn: '查看归档'
     },
     features: {
       lab: {
         title: 'AI 实验',
-        desc: '随便试试一些 AI 想法，能不能用另说，有意思就行。'
+        desc: '探索和测试各种 AI 新玩法，把一些有趣的想法变成现实。'
       },
       blog: {
         title: '技术记录',
-        desc: '写点开发相关的东西，踩坑、经验，还有一些碎碎念。'
+        desc: '记录平时的开发经验、踩坑日记，以及一些技术思考。'
       },
       tools: {
         title: '小工具',
-        desc: '做了一些自己会用到的小工具，顺手也放出来。'
+        desc: '开发过程中顺手写的一些实用工具，方便自己也分享给大家。'
       },
       games: {
         title: '小游戏',
-        desc: '偶尔写点能玩的东西，不一定复杂，但应该挺有趣。'
+        desc: '工作之余写的一些休闲小游戏，随时随地放松一下。'
       },
       chat: {
-        title: '聊天室',
-        desc: '随便聊聊技术或者别的，有人就聊，没人就放着。',
-        action: '进来聊聊'
+        ai_title: 'AI 聊天室',
+        ai_desc: '接入了多种常用的大语言模型，方便平时提问和交流。',
+        ai_action: '开始对话',
+        ai_tag: 'GPT-4o / Claude',
+        ai_feature: '响应迅速，聊天记录支持多端同步保存。',
+        channel_title: '频道',
+        channel_desc: '一个简单的在线留言与公共交流频道，欢迎随时进来聊天吐槽。',
+        channel_action: '进来聊聊',
+        channel_online: '142 在线',
+        mock_user: 'Alice, Bob, Chris +1',
+        mock_time: '刚刚',
+        mock_msg: '这个博客新版挺好看的，体验不错！'
       }
     }
   },
@@ -116,12 +125,12 @@ export default {
     sign_up: '立即注册'
   },
   chat: {
-    ai_personas: 'AI 智能体',
-    live_rooms: '真人聊天室',
-    public_channels: '公开频道',
+    ai_personas: 'AI 聊天室',
+    live_rooms: '频道',
+    public_channels: '所有频道',
     new_room: '+ 新建',
     online: '在线',
-    live: '直播',
+    live: '频道',
     ai_bot: 'AI 助手',
     login_required: '您必须登录才能参与实时聊天室。',
     login_btn: '登录以开始聊天',

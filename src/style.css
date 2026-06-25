@@ -163,67 +163,10 @@ html, body {
 }
 
 /* Ensure no default menu padding in mega menu */
-@import "tailwindcss";
-@variant dark (&:where(.dark, .dark *));
-
-@theme {
-  --color-primary: #7c3aed;
-  
-  --slate-50: #f8fafc;
-  --slate-100: #f1f5f9;
-  --slate-200: #e2e8f0;
-  --slate-300: #cbd5e1;
-  --slate-400: #94a3b8;
-  --slate-500: #64748b;
-  --slate-600: #475569;
-  --slate-700: #334155;
-  --slate-800: #1e293b;
-  --slate-900: #0f172a;
-  --slate-950: #020617;
-}
-
-/* Custom global styles */
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: light;
-  
-  --bg-page: var(--slate-50);
-  --bg-page-rgb: 248, 250, 252;
-  --text-page: var(--slate-900);
-  --border-page: var(--slate-200);
-}
-
-html.dark {
-  color-scheme: dark;
-  --bg-page: var(--slate-950);
-  --bg-page-rgb: 2, 6, 23;
-  --text-page: var(--slate-50);
-  --border-page: var(--slate-800);
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-  min-width: 320px;
-  background-color: var(--bg-page);
-  color: var(--text-page);
-}
-
-#app {
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-}
-
-
-/* Global styles */
-* {
-  box-sizing: border-box;
+.mega-menu-popper .el-dropdown-menu {
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
 }
 
 /* View Transition API styles for theme flip */
@@ -428,5 +371,3 @@ html, body {
   background-color: rgba(168, 85, 247, 0.1) !important;
   color: #c084fc !important;
 }
-b u t t o n   {   c u r s o r :   p o i n t e r ;   }  
- 

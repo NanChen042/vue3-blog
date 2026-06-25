@@ -98,6 +98,7 @@ const tileCellStyle = (tile: Tile) => ({
   height: `${cellPx.value}px`,
   left: `${gapPx.value + tile.col * (cellPx.value + gapPx.value)}px`,
   top: `${gapPx.value + tile.row * (cellPx.value + gapPx.value)}px`,
+  transition: 'left 150ms ease-in-out, top 150ms ease-in-out',
 });
 
 const TILE_COLORS: Record<number, string> = {
@@ -242,7 +243,7 @@ const move = (dir: Direction) => {
     for (let r = 0; r < 4; r++) {
       for (let c = 0; c < 4; c++) {
         const tile = grid.value[r][c];
-        if (tile && tile.value === 2048 && gameStatus.value === 'playing') {
+        if (tile && tile.value === 2048 && gameStatus.value === 'playing' && !keepPlaying.value) {
           gameStatus.value = 'won';
           return;
         }

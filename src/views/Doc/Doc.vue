@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-white dark:bg-[#0A0A0A] transition-colors duration-300">
-    <div class="max-w-[90rem] mx-auto px-4 sm:px-6 md:px-8">
+    <div class="max-w-[90rem] mx-auto px-4 sm:px-6 md:px-8" :style="themeCssVars">
       
       <!-- 3 Column Layout -->
       <div class="flex flex-col lg:flex-row">
@@ -24,7 +24,7 @@
                 <li v-for="item in category.items" :key="item.id">
                   <router-link :to="`/doc/${item.id}`" class="block pl-4 -ml-px border-l text-sm transition-colors" :class="[
                     route.params.id === item.id 
-                      ? 'border-indigo-500 font-semibold text-indigo-600 dark:text-indigo-400' 
+                      ? 'font-semibold active-nav-link' 
                       : 'border-transparent hover:border-zinc-400 font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-300'
                   ]">
                     {{ item.title }}
@@ -71,7 +71,7 @@
               </n-button>
             </div>
 
-            <article ref="articleRef" :class="articleClass" :style="themeCssVars">
+            <article ref="articleRef" :class="articleClass">
               <component :is="currentDocComponent" v-if="currentDocComponent" :key="route.params.id" />
               <div v-else class="py-20 text-center text-zinc-500">
                 <svg class="w-12 h-12 mx-auto mb-4 text-zinc-300 dark:text-zinc-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -108,7 +108,7 @@
             <h4 class="text-xs font-semibold text-zinc-900 dark:text-white uppercase tracking-wider mb-4">本页目录</h4>
             <ul v-if="toc.length > 0" class="space-y-2.5 text-sm">
               <li v-for="heading in toc" :key="heading.text" :style="{ paddingLeft: `${(heading.level - 1) * 12}px` }">
-                <a href="javascript:void(0)" @click.prevent="scrollTo(heading.text)" :class="activeHeading === heading.text ? 'text-indigo-600 font-bold dark:text-indigo-400' : 'text-zinc-500 hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400'" class="transition-colors block truncate" :title="heading.text">
+                <a href="javascript:void(0)" @click.prevent="scrollTo(heading.text)" :class="activeHeading === heading.text ? 'font-bold active-toc-link' : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-300'" class="transition-colors block truncate" :title="heading.text">
                   {{ heading.text }}
                 </a>
               </li>
@@ -140,7 +140,7 @@
               <li v-for="item in category.items" :key="item.id">
                 <router-link :to="`/doc/${item.id}`" @click="showMobileMenu = false" class="block pl-4 -ml-px border-l text-sm transition-colors" :class="[
                   route.params.id === item.id 
-                    ? 'border-indigo-500 font-semibold text-indigo-600 dark:text-indigo-400' 
+                    ? 'font-semibold active-nav-link' 
                     : 'border-transparent hover:border-zinc-400 font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-300'
                 ]">
                   {{ item.title }}
@@ -256,10 +256,19 @@ const scrollTo = (text: string) => {
   for (let i = 0; i < headings.length; i++) {
     const el = headings[i] as HTMLElement;
     if (el.textContent?.trim() === text) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      el.classList.remove('heading-flash');
-      void el.offsetWidth;
-      el.classList.add('heading-flash');
+      if (window.getComputedStyle(el).display === 'none') {
+        const scrollContainer = document.querySelector('.n-layout-scroll-container');
+        if (scrollContainer) {
+          scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      } else {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        el.classList.remove('heading-flash');
+        void el.offsetWidth;
+        el.classList.add('heading-flash');
+      }
       break;
     }
   }
@@ -283,11 +292,12 @@ const initDocFeatures = () => {
     if (!codeBlock) return;
     
     // --- Mermaid 流程图处理 ---
-    const isMermaid = codeBlock.className.includes('language-mermaid') || codeBlock.className.includes('mermaid');
+    const isMermaid = codeBlock.className.includes('language-mermaid') || codeBlock.className.includes('mermaid') || pre.className.includes('language-mermaid') || pre.className.includes('mermaid');
     if (isMermaid) {
       const mermaidDiv = document.createElement('div');
       mermaidDiv.className = 'mermaid flex justify-center py-4 bg-zinc-50 dark:bg-zinc-900/50 rounded-xl my-6 border border-zinc-200 dark:border-zinc-800';
       mermaidDiv.textContent = codeBlock.textContent || '';
+      mermaidDiv.id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
       pre.parentNode?.replaceChild(mermaidDiv, pre);
       
       // 捕获可能渲染失败的错误，防止控制台崩溃
@@ -330,7 +340,7 @@ const initDocFeatures = () => {
     btn.innerHTML = `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>`;
     
     btn.addEventListener('click', () => {
-      const code = codeBlock.innerText;
+      const code = codeBlock.textContent || '';
       navigator.clipboard.writeText(code).then(() => {
         btn.innerHTML = `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
         btn.classList.add('text-emerald-400', 'bg-emerald-500/20', 'border-emerald-500/30');
@@ -357,6 +367,7 @@ const handleWindowScroll = () => {
   const headings = document.querySelectorAll('.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4');
   let currentActive = toc.value[0]?.text || '';
   headings.forEach((el) => {
+    if (window.getComputedStyle(el).display === 'none') return;
     const rect = el.getBoundingClientRect();
     if (rect.top <= 150) {
       currentActive = el.textContent?.trim() || currentActive;
@@ -422,18 +433,74 @@ onUnmounted(() => {
   scroll-margin-top: 100px;
 }
 
-/* 表格样式优化 */
+/* 标题颜色随主题变化 */
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+  color: var(--theme-text-light);
+  transition: color 0.3s;
+}
+html.dark .markdown-body h1, html.dark .markdown-body h2, html.dark .markdown-body h3, html.dark .markdown-body h4, html.dark .markdown-body h5, html.dark .markdown-body h6 {
+  color: var(--theme-text-dark);
+}
+
+/* 引用区块主题化 */
+.markdown-body blockquote {
+  border-left-color: var(--theme-text-light) !important;
+  background-color: var(--theme-bg-light);
+  padding: 1rem 1.25rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  margin: 1.5rem 0;
+  font-style: normal;
+  transition: all 0.3s;
+}
+html.dark .markdown-body blockquote {
+  border-left-color: var(--theme-text-dark) !important;
+  background-color: var(--theme-bg-dark);
+}
+.markdown-body blockquote > p {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* 水平分割线样式优化 */
+.markdown-body hr {
+  margin: 2rem 0 !important;
+  border-top-width: 1px;
+  border-color: #e4e4e7;
+}
+html.dark .markdown-body hr {
+  border-color: #27272a;
+}
+
+/* 导航高亮样式 */
+.active-nav-link {
+  border-left-color: var(--theme-text-light);
+  color: var(--theme-text-light);
+}
+html.dark .active-nav-link {
+  border-left-color: var(--theme-text-dark);
+  color: var(--theme-text-dark);
+}
+.active-toc-link {
+  color: var(--theme-text-light);
+}
+html.dark .active-toc-link {
+  color: var(--theme-text-dark);
+}
+
+/* 表格样式优化与主题化 */
 .markdown-body table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 2rem 0; font-size: 0.875rem; border: 1px solid #e4e4e7; border-radius: 0.5rem; overflow: hidden; }
 html.dark .markdown-body table { border-color: #27272a; }
-.markdown-body th, .markdown-body td { padding: 0.75rem 1rem; border-bottom: 1px solid #e4e4e7; text-align: left; }
+.markdown-body th, .markdown-body td { padding: 0.75rem 1rem; border-bottom: 1px solid #e4e4e7; text-align: left; transition: all 0.3s; }
 html.dark .markdown-body th, html.dark .markdown-body td { border-bottom-color: #27272a; }
-.markdown-body th { background-color: #f4f4f5; font-weight: 600; color: #18181b; }
-html.dark .markdown-body th { background-color: #18181b; color: #fff; }
+
+.markdown-body th { background-color: var(--theme-bg-light); font-weight: 600; color: var(--theme-text-light); }
+html.dark .markdown-body th { background-color: var(--theme-bg-dark); color: var(--theme-text-dark); }
+
 .markdown-body tr:last-child td { border-bottom: none; }
 .markdown-body tbody tr:nth-child(even) { background-color: #fafafa; }
 html.dark .markdown-body tbody tr:nth-child(even) { background-color: #121212; }
-.markdown-body tbody tr:hover { background-color: #f4f4f5; }
-html.dark .markdown-body tbody tr:hover { background-color: #27272a; }
+.markdown-body tbody tr:hover { background-color: var(--theme-bg-light); }
+html.dark .markdown-body tbody tr:hover { background-color: var(--theme-bg-dark); }
 
 /* 优化内联代码块样式，随主题色动态变化 */
 .markdown-body code::before,

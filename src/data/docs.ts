@@ -21,6 +21,8 @@ const createDoc = (loader: any) => defineAsyncComponent({
 export interface DocItem {
   id: string;
   title: string;
+  description?: string;
+  version?: string;
   projectLink?: string;
   component: any;
 }
@@ -34,9 +36,9 @@ export const docMenus: DocCategory[] = [
   {
     title: 'AI Agents',
     items: [
-      { id: 'github-reviewer', title: 'GitHub Reviewer', projectLink: 'https://github.com/your-org/github-reviewer', component: createDoc(() => import('@/docs/github-reviewer.md')) },
-      { id: 'auto-translator', title: 'Auto-Translator', projectLink: 'https://github.com/your-org/auto-translator', component: createDoc(() => import('@/docs/auto-translator.md')) },
-      { id: 'code-generator', title: 'Code Generator', projectLink: 'https://github.com/your-org/code-generator', component: createDoc(() => import('@/docs/code-generator.md')) },
+      { id: 'github-reviewer', title: 'GitHub Reviewer', version: 'V1.2', description: '自动化分析 PR 差异并提供审查建议', projectLink: 'https://github.com/your-org/github-reviewer', component: createDoc(() => import('@/docs/github-reviewer.md')) },
+      { id: 'auto-translator', title: 'Auto-Translator', version: 'BETA', description: '基于上下文的多语言 Markdown 翻译', projectLink: 'https://github.com/your-org/auto-translator', component: createDoc(() => import('@/docs/auto-translator.md')) },
+      { id: 'code-generator', title: 'Code Generator', version: 'V2.0', description: '根据自然语言需求自动生成 Vue/React 组件', projectLink: 'https://github.com/your-org/code-generator', component: createDoc(() => import('@/docs/code-generator.md')) },
     ]
   },
   {

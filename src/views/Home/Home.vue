@@ -6,9 +6,9 @@
     <HeroSection />
 
     <section class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 pb-24">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <AILabSection />
-        <RecentPosts />
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <AILabSection class="lg:col-span-2" />
+        <RecentPosts class="lg:col-span-1" />
         <SidebarCards />
       </div>
     </section>

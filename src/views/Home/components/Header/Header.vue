@@ -11,7 +11,7 @@
         </div>
 
         <div class="hidden lg:flex shrink-0 justify-center h-full">
-          <NavMenu mode="horizontal" />
+          <NavMenu mode="horizontal" class="h-full" />
         </div>
 
         <!-- 桌面端右侧功能区，移动端隐藏 -->
@@ -36,9 +36,9 @@
       <n-drawer-content :body-content-style="{ padding: 0 }">
         <div class="flex flex-col h-full bg-slate-50 dark:bg-slate-950 p-4">
           <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
-            <!-- 侧边栏 Logo -->
-            <div @click="drawerVisible = false; router.push('/home')">
-              <Logo class="scale-90 origin-left" />
+            <!-- 侧边栏标题 -->
+            <div class="flex items-center">
+              <span class="text-zinc-900 dark:text-zinc-100 font-bold text-lg tracking-widest">目录</span>
             </div>
             
             <button @click="drawerVisible = false" class="p-2 rounded-xl text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">

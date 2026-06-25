@@ -1,62 +1,107 @@
 <template>
-  <!-- 博客文章 -->
-  <div class="group relative overflow-hidden rounded-xl bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-zinc-800/80 hover:border-zinc-400 dark:hover:border-zinc-600 shadow-sm hover:shadow-md transition-all duration-500 cursor-pointer p-8 flex flex-col" @click="router.push('/blog')">
+<div class="md:col-span-1 group relative overflow-hidden rounded-[3px] bg-white dark:bg-[#09090B] border border-[#efeff5] dark:border-[rgba(255,255,255,0.09)] hover:shadow-[0_3px_12px_rgba(0,0,0,0.08)] dark:hover:shadow-[0_3px_12px_rgba(0,0,0,0.3)] transition-all duration-300 cursor-pointer p-7 flex flex-col min-h-[360px]" @click="router.push('/blog')">
 
-    <div class="mb-auto">
-      <div class="w-12 h-12 mb-4 rounded-lg border border-zinc-200 dark:border-zinc-800 flex items-center justify-center bg-zinc-50 dark:bg-zinc-900/50 group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 group-hover:border-blue-200 dark:group-hover:border-blue-800 transition-colors">
-        <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v10a2 2 0 01-2 2zM14 4v5h5M8 12h8m-8 4h6" />
+  <!-- 高级背景：精细书写画布效果 (Premium Canvas Board) -->
+  <div class="absolute inset-0 pointer-events-none overflow-hidden transition-all duration-700 bg-white dark:bg-transparent">
+    <!-- SVG 极简白噪点纸质肌理 -->
+    <svg class="absolute inset-0 w-full h-full opacity-[0.2] dark:opacity-[0.1] mix-blend-overlay">
+      <filter id="noiseFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" />
+      </filter>
+      <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+    </svg>
+
+    <!-- 精细手稿网格 & 阅读辅助线 -->
+    <svg class="absolute inset-0 w-full h-full opacity-[0.04] dark:opacity-[0.06] group-hover:opacity-[0.08] transition-all duration-[1.5s]" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="manuscript-grid" width="32" height="32" patternUnits="userSpaceOnUse">
+          <!-- 极简网格线与中心点 -->
+          <path d="M 32 0 L 0 0 0 32" fill="none" stroke="currentColor" stroke-width="0.5" />
+          <circle cx="16" cy="16" r="0.75" fill="currentColor" />
+        </pattern>
+      </defs>
+      
+      <!-- 铺满手稿画布 -->
+      <rect width="100%" height="100%" fill="url(#manuscript-grid)" />
+      
+      <!-- 悬浮时浮现的左侧基准阅读辅助线 (模仿高级笔记本的红/蓝线线距) -->
+      <line x1="28" y1="0" x2="28" y2="100%" stroke="currentColor" stroke-width="1.5" class="opacity-0 group-hover:opacity-[0.4] text-blue-500 transition-opacity duration-1000" />
+      <line x1="32" y1="0" x2="32" y2="100%" stroke="currentColor" stroke-width="0.5" class="opacity-0 group-hover:opacity-[0.2] text-blue-500 transition-opacity duration-1000 delay-150" />
+    </svg>
+  </div>
+
+  <!-- Decorative Abstract Background -->
+<div class="absolute right-0 top-0 w-1/2 h-40 pointer-events-none opacity-[0.04] group-hover:opacity-[0.08] transition-opacity duration-700 overflow-hidden flex justify-end items-start pt-6 pr-6">
+    <svg class="w-24 h-24 text-blue-500" viewBox="0 0 100 100" fill="none">
+      <line x1="80" y1="0" x2="80" y2="100" stroke="currentColor" stroke-width="0.5" stroke-dasharray="2 4" />
+      <line x1="20" y1="40" x2="100" y2="40" stroke="currentColor" stroke-width="0.5" class="opacity-50" />
+      
+      <path d="M 30 20 L 60 20 L 80 40 L 100 40" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" class="group-hover:translate-x-2 transition-transform duration-1000 ease-out" />
+      
+      <rect x="58" y="18" width="4" height="4" fill="currentColor" />
+      <rect x="78" y="38" width="4" height="4" fill="currentColor" />
+    </svg>
+  </div>
+
+  <div class="absolute right-0 top-0 w-72 h-64 pointer-events-none opacity-[0.04] dark:opacity-[0.08] group-hover:opacity-[0.15] transition-opacity duration-1000 overflow-hidden flex justify-end items-start pt-4 pr-4">
+    <svg class="w-full h-full text-blue-500" viewBox="0 0 120 100" fill="none">
+      <path d="M 10 30 L 50 30 L 65 45 L 110 45" stroke="currentColor" stroke-width="0.5" stroke-dasharray="2 2" />
+      <path d="M 30 70 L 50 70 L 65 55 L 100 55" stroke="currentColor" stroke-width="1" class="group-hover:translate-x-2 transition-transform duration-[1.5s] ease-in-out" />
+      <rect x="48" y="28" width="4" height="4" fill="currentColor" />
+      <rect x="63" y="53" width="4" height="4" fill="currentColor" />
+      <line x1="90" y1="20" x2="90" y2="80" stroke="currentColor" stroke-width="0.5" class="group-hover:opacity-50 transition-opacity duration-700" />
+      <polygon points="88,45 92,45 90,40" fill="currentColor" class="group-hover:-translate-y-4 transition-transform duration-1000" />
+    </svg>
+  </div>
+
+  <div class="relative z-10 flex justify-between items-start mb-6">
+    <div class="flex items-start gap-3">
+      <div class="w-5 h-5 mt-1 flex items-center justify-center text-blue-600 dark:text-blue-500">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-full h-full">
+          <path d="M 4 6 L 16 6 M 4 12 L 20 12 M 4 18 L 12 18" stroke-linecap="round" />
         </svg>
       </div>
-      <div class="flex items-center gap-2 mb-3">
-        <h3 class="text-xl font-bold tracking-tight text-zinc-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+      <div>
+        <h3 class="text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100 transition-colors">
           {{ $t('home.features.blog.title') }}
         </h3>
-        <span class="px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-semibold">{{ recentPosts.length }} 篇</span>
-      </div>
-      <p class="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed mb-4">
-        {{ $t('home.features.blog.desc') }}
-      </p>
-    </div>
-
-    <!-- Featured 文章 -->
-    <div class="mb-4 rounded-lg overflow-hidden border border-zinc-100 dark:border-zinc-800 group/feat hover:border-blue-200 dark:group-hover/feat:border-blue-800/30 transition-colors">
-      <div class="h-28 overflow-hidden bg-zinc-50 dark:bg-zinc-900 relative">
-        <img v-if="recentPosts[0]?.coverUrl" :src="recentPosts[0].coverUrl" class="w-full h-full object-cover group-hover/feat:scale-105 transition-transform duration-500" />
-        <div class="absolute inset-0 bg-linear-to-t from-black/30 to-transparent"></div>
-        <div class="absolute bottom-2 left-2.5 right-2.5">
-          <span class="px-1.5 py-0.5 rounded-md bg-blue-600 text-white text-xs font-bold uppercase tracking-wide">置顶</span>
-        </div>
-      </div>
-      <div class="p-3 bg-white dark:bg-[#0A0A0A]">
-        <div class="text-xs font-bold text-zinc-800 dark:text-zinc-200 leading-snug mb-1 line-clamp-2 group-hover/feat:text-blue-600 dark:group-hover/feat:text-blue-400 transition-colors">{{ recentPosts[0]?.title }}</div>
-        <div class="flex items-center gap-2">
-          <span class="text-xs px-1.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-500 dark:text-blue-400 font-medium">{{ recentPosts[0]?.category }}</span>
-          <span class="text-xs text-zinc-400">{{ recentPosts[0]?.date }}</span>
-          <span class="text-xs text-zinc-400">· {{ recentPosts[0]?.readTime }}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- 最新文章列表 -->
-    <div class="space-y-2">
-      <div v-for="post in recentPosts.slice(1)" :key="post.id" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors group/post">
-        <div class="w-11 h-11 rounded-lg bg-zinc-100 dark:bg-zinc-800 overflow-hidden shrink-0">
-          <img v-if="post.coverUrl" :src="post.coverUrl" class="w-full h-full object-cover" />
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="text-xs font-semibold text-zinc-800 dark:text-zinc-200 truncate group-hover/post:text-blue-600 dark:group-hover/post:text-blue-400 transition-colors">{{ post.title }}</div>
-          <div class="flex items-center gap-2 mt-0.5">
-            <span class="text-xs px-1.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-500 dark:text-blue-400 font-medium">{{ post.category }}</span>
-            <span class="text-xs text-zinc-400">{{ post.readTime }}</span>
-          </div>
-        </div>
-        <svg class="w-3.5 h-3.5 text-zinc-300 dark:text-zinc-600 shrink-0 opacity-0 group-hover/post:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
+        <p class="text-sm font-medium text-zinc-500 mt-1.5 leading-relaxed">
+          {{ $t('home.features.blog.desc') }}
+        </p>
       </div>
     </div>
   </div>
+
+  <!-- Unified Timeline Tree List -->
+  <div class="relative z-10 flex-1 ml-3 pl-6 border-l border-zinc-200 dark:border-zinc-800 space-y-6 mt-4">
+    <div v-for="post in recentPosts.slice(0, 4)" :key="post.id" class="relative group/item cursor-pointer">
+      <!-- 横线 -->
+      <div class="absolute -left-6 top-3 w-4 h-px bg-zinc-200 dark:bg-zinc-800 group-hover/item:bg-blue-400 dark:group-hover/item:bg-blue-600 transition-colors z-10"></div>
+      <!-- 节点 (绝对居中在竖线上) -->
+      <div class="absolute -left-[28px] top-2 w-2 h-2 bg-white dark:bg-[#09090B] border-[1.5px] border-zinc-300 dark:border-zinc-700 rounded-full group-hover/item:border-blue-500 transition-colors z-20 shadow-[0_0_0_2px_#ffffff] dark:shadow-[0_0_0_2px_#09090B]"></div>
+      
+      <!-- 内容 -->
+      <div class="flex gap-4">
+        <!-- 缩略图 -->
+        <div class="w-14 h-14 rounded border border-zinc-200 dark:border-zinc-800 shrink-0 overflow-hidden bg-zinc-50 dark:bg-zinc-900/30">
+          <img v-if="post.coverUrl" :src="post.coverUrl" class="w-full h-full object-cover grayscale-[30%] group-hover/item:grayscale-0 transition-all duration-500" />
+        </div>
+        <div class="flex-1 min-w-0 pt-0.5">
+          <div class="text-base font-bold text-zinc-900 dark:text-zinc-200 group-hover/item:text-blue-600 dark:group-hover/item:text-blue-400 transition-colors line-clamp-1">
+            {{ post.title }}
+          </div>
+          <div class="flex items-center gap-2 text-xs font-mono text-zinc-500 mt-1.5">
+            <span>{{ post.date }}</span>
+            <span class="text-zinc-300 dark:text-zinc-700">/</span>
+            <span class="text-blue-500">{{ post.category }}</span>
+            <span class="text-zinc-300 dark:text-zinc-700">/</span>
+            <span>{{ post.readTime }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script setup lang="ts">

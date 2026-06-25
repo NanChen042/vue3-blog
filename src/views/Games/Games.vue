@@ -4,10 +4,10 @@
       
       <!-- Page Header -->
       <div class="mb-10 mt-10">
-        <n-h1 style="margin-bottom: 8px;">
-          <n-text type="primary">{{ $t('games.just_play') }}</n-text>
+        <n-h1 style="margin-bottom: 8px; font-weight: 800; letter-spacing: -0.02em;">
+          <span class="text-zinc-900 dark:text-zinc-50">{{ $t('games.just_play') }}</span>
         </n-h1>
-        <n-p class="text-zinc-500" style="margin-top: 0; font-size: 16px;">
+        <n-p class="text-zinc-500 dark:text-zinc-400" style="margin-top: 0; font-size: 15px;">
           {{ $t('games.intro') || 'Small visual experiments and HTML5 mini-games.' }}
         </n-p>
       </div>
@@ -53,38 +53,41 @@
 
       <!-- Games Grid -->
       <div v-if="filteredGames.length > 0">
-        <n-grid x-gap="20" y-gap="20" cols="1 s:2 m:3 l:4" responsive="screen">
+        <n-grid x-gap="24" y-gap="24" cols="1 s:2 m:3 l:4" responsive="screen">
           <n-grid-item v-for="game in filteredGames" :key="game.id">
             <n-card
               hoverable
-              size="small"
-              class="h-full cursor-pointer flex flex-col"
+              :bordered="false"
+              class="h-full cursor-pointer bg-white dark:bg-[#18181c] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg rounded-xl overflow-hidden"
+              content-style="padding: 16px; display: flex; flex-direction: column; flex: 1;"
               @click="goToGame(game.id)"
             >
               <template #cover>
-                <div class="aspect-[4/3] overflow-hidden relative bg-zinc-100 dark:bg-zinc-800">
-                  <img :src="game.coverUrl" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
-                  <div v-if="game.isNew" class="absolute top-2 right-2">
-                    <n-tag type="info" size="small" round>New</n-tag>
+                <div class="aspect-[4/3] overflow-hidden relative bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-100 dark:border-zinc-800">
+                  <img :src="game.coverUrl" class="w-full h-full object-cover transition-transform duration-500 hover:scale-[1.03]" />
+                  <div v-if="game.isNew" class="absolute top-3 right-3">
+                    <n-tag type="success" size="small" :bordered="false" class="font-medium shadow-sm backdrop-blur-md bg-green-500/90 text-white dark:bg-green-600/90" round>New</n-tag>
                   </div>
                 </div>
               </template>
               
               <template #header>
-                <div class="flex items-center gap-2">
-                  <span class="truncate">{{ game.title }}</span>
-                  <n-tag v-if="game.category" size="small" :bordered="false">{{ game.category }}</n-tag>
+                <div class="flex items-center justify-between gap-2 w-full">
+                  <span class="text-base font-bold text-zinc-800 dark:text-zinc-100 truncate">{{ game.title }}</span>
+                  <n-tag v-if="game.category" size="small" type="info" :bordered="false" class="font-medium bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" round>{{ game.category }}</n-tag>
                 </div>
               </template>
 
-              <n-ellipsis :line-clamp="2" :tooltip="false" class="text-zinc-500 text-sm h-10">
+              <n-ellipsis :line-clamp="2" :tooltip="false" class="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed h-[40px] mb-4">
                 {{ game.description }}
               </n-ellipsis>
 
               <template #action>
-                <n-button type="primary" block secondary @click.stop="goToGame(game.id)">
-                  {{ $t('games.play_now') }}
-                </n-button>
+                <div class="pt-2 border-t border-zinc-100 dark:border-zinc-800/80">
+                  <n-button type="primary" block secondary strong class="font-medium hover:opacity-90 transition-opacity" @click.stop="goToGame(game.id)">
+                    {{ $t('games.play_now') }}
+                  </n-button>
+                </div>
               </template>
             </n-card>
           </n-grid-item>

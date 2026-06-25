@@ -62,9 +62,18 @@ export default {
         desc: 'A few simple games — nothing fancy, just for fun.'
       },
       chat: {
-        title: 'Chat',
-        desc: 'A place to talk about tech or anything else, if anyone’s around.',
-        action: 'Join Chat'
+        ai_title: 'AI Chat',
+        ai_desc: 'Converse with the smartest brains globally, seamlessly switching between top models.',
+        ai_action: 'Start Chat',
+        ai_tag: 'GPT-4o / Claude',
+        ai_feature: 'Lightning fast response, cross-device encrypted sync.',
+        channel_title: 'Channel',
+        channel_desc: 'Chat about tech or whatever. Talk if people are around, leave it if not.',
+        channel_action: 'Join Channel',
+        channel_online: '142 Online',
+        mock_user: 'Alice, Bob, Chris +1',
+        mock_time: 'Just now',
+        mock_msg: 'This project is awesome, looking forward to the next version 🚀'
       }
     }
   },
@@ -117,12 +126,12 @@ export default {
     sign_up: 'Sign up now'
   },
   chat: {
-    ai_personas: 'AI Personas',
-    live_rooms: 'Live Rooms',
-    public_channels: 'Public Channels',
+    ai_personas: 'AI Chat',
+    live_rooms: 'Channels',
+    public_channels: 'All Channels',
     new_room: '+ New',
     online: 'online',
-    live: 'Live',
+    live: 'Channel',
     ai_bot: 'AI Assistant',
     login_required: 'You must be logged in to participate in live rooms.',
     login_btn: 'Log in to Chat',

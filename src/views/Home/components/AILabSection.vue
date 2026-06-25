@@ -1,117 +1,139 @@
 <template>
   <!-- AI 实验 - 大卡片 -->
-  <div class="md:col-span-2 group relative overflow-hidden rounded-xl bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-zinc-800/80 hover:border-indigo-500/30 dark:hover:border-indigo-400/30 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-500 cursor-pointer p-8 flex flex-col justify-between min-h-[320px]" @click="router.push('/lab')">
+<div class="md:col-span-2 group relative overflow-hidden rounded-[3px] bg-white dark:bg-[#050505] border border-[#efeff5] dark:border-[rgba(255,255,255,0.09)] hover:shadow-[0_3px_12px_rgba(0,0,0,0.08)] dark:hover:shadow-[0_3px_12px_rgba(0,0,0,0.3)] transition-all duration-300 p-7 flex flex-col justify-between min-h-[360px] cursor-pointer">
 
-    <!-- 装饰背景 -->
-    <div class="absolute inset-0 pointer-events-none overflow-hidden">
-      <div class="absolute -right-16 -top-16 w-[320px] h-[320px]">
-        <div class="relative w-full h-full flex items-center justify-center">
-          <div class="w-full h-full border border-zinc-100 dark:border-zinc-800 rounded-full"></div>
-          <div class="absolute inset-8 border border-zinc-100 dark:border-zinc-800 rounded-full"></div>
-          <div class="absolute inset-16 border border-zinc-200 dark:border-zinc-700 rounded-full border-dashed group-hover:rotate-[540deg] transition-transform duration-[5s] ease-in-out"></div>
-          <div class="absolute inset-24 border border-indigo-200 dark:border-indigo-800/40 rounded-full"></div>
-          <!-- 旋转扫描线 -->
-          <div class="absolute inset-0 animate-[spin_6s_linear_infinite]">
-            <div class="w-full h-px bg-gradient-to-r from-transparent via-indigo-400/60 to-transparent absolute top-1/2 left-0 -translate-y-1/2"></div>
-          </div>
-          <!-- 浮动粒子 -->
-          <div class="absolute w-2 h-2 bg-indigo-500 rounded-full shadow-[0_0_12px_#6366f1] top-[15%] left-[68%] group-hover:scale-150 transition-transform duration-700"></div>
-          <div class="absolute w-1.5 h-1.5 bg-violet-400 rounded-full shadow-[0_0_8px_#8b5cf6] top-[60%] left-[18%] group-hover:scale-150 transition-transform duration-700 delay-100"></div>
-          <div class="absolute w-1 h-1 bg-cyan-400 rounded-full shadow-[0_0_6px_#06b6d4] top-[75%] left-[65%] group-hover:scale-150 transition-transform duration-700 delay-200"></div>
-          <!-- 连接线 -->
-          <svg class="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-30 transition-opacity duration-1000" viewBox="0 0 320 320">
-            <circle cx="160" cy="160" r="60" fill="none" stroke="#6366f1" stroke-width="0.5" stroke-dasharray="4 4" />
-            <circle cx="160" cy="160" r="100" fill="none" stroke="#8b5cf6" stroke-width="0.5" stroke-dasharray="4 6" />
-          </svg>
-        </div>
-      </div>
-      <!-- 底部渐变遮罩 -->
-      <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white dark:from-[#0A0A0A] to-transparent"></div>
-    </div>
+  <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-[0.03] dark:opacity-[0.08] group-hover:opacity-[0.12] transition-opacity duration-1000" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="cyber-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="0.5" />
+        <path d="M 20 18 L 20 22 M 18 20 L 22 20" stroke="currentColor" stroke-width="1.5" />
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#cyber-grid)" />
+  </svg>
 
-    <!-- 顶部: 图标 + 标题描述 -->
-    <div class="relative z-10">
-      <div class="flex items-center justify-between mb-4">
-        <div class="w-12 h-12 rounded-lg bg-zinc-100 dark:bg-[#111] border border-zinc-200 dark:border-zinc-800 flex items-center justify-center group-hover:bg-indigo-50 dark:group-hover:bg-indigo-500/10 group-hover:border-indigo-200 dark:group-hover:border-indigo-500/30 transition-colors duration-500">
-          <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400 icon-float" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-          </svg>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block mr-1 animate-pulse"></span>
-            {{aiModels.filter(m => m.status === 'online').length}} 在线
-          </span>
-          <span class="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 text-xs font-semibold">{{ aiModels.length }} 模型</span>
-        </div>
-      </div>
-      <h3 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-        {{ $t('home.features.lab.title') }}
-      </h3>
-      <p class="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed max-w-sm">
-        {{ $t('home.features.lab.desc') }}
-      </p>
-    </div>
-
-    <!-- 中间占位：AI Agent 项目集合 -->
-    <div class="relative z-10 my-5 flex-1 flex flex-col gap-3 w-full">
+  <div class="absolute right-12 top-1/2 -translate-y-1/2 w-20 h-40 opacity-[0.08] group-hover:opacity-[0.35] transition-all duration-700 pointer-events-none flex items-center justify-end">
+    <svg class="w-full h-full text-zinc-500 dark:text-zinc-400 group-hover:text-indigo-400 transition-colors duration-700" viewBox="0 0 60 100" fill="none">
+      <line x1="50" y1="0" x2="50" y2="100" stroke="currentColor" stroke-width="0.5" stroke-dasharray="2 4" />
+      <line x1="10" y1="20" x2="10" y2="80" stroke="currentColor" stroke-width="0.5" stroke-dasharray="2 4" />
       
-      <!-- Agent 项目 1 -->
-      <div @click.stop="router.push('/doc/github-reviewer')" class="group/demo flex items-start gap-3 p-3 rounded-xl bg-white/60 dark:bg-zinc-900/60 border border-zinc-100 dark:border-zinc-800 hover:border-indigo-200 dark:hover:border-indigo-800/50 hover:bg-white dark:hover:bg-zinc-800 hover:shadow-sm transition-all duration-300 cursor-pointer">
-        <div class="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 flex items-center justify-center shrink-0 group-hover/demo:scale-105 transition-transform">
-          <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="flex justify-between items-center mb-0.5">
-            <span class="text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover/demo:text-indigo-600 dark:group-hover/demo:text-indigo-400 transition-colors">GitHub Reviewer Agent</span>
-            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400">v1.2</span>
-          </div>
-          <p class="text-xs text-zinc-500 dark:text-zinc-400 truncate">自动化分析 PR 差异并提供深度代码审查建议</p>
-        </div>
-      </div>
+      <path d="M 50 25 L 35 25 L 25 35 L 10 35" stroke="currentColor" stroke-width="1" stroke-linejoin="miter" />
+      <rect x="8" y="33" width="4" height="4" fill="currentColor" />
+      
+      <path d="M 50 60 L 40 60 L 30 50 L 10 50" stroke="currentColor" stroke-width="1" stroke-linejoin="miter" />
+      <circle cx="10" cy="50" r="2.5" fill="currentColor" />
+      
+      <path d="M 50 85 L 20 85 L 10 75" stroke="currentColor" stroke-width="1" stroke-linejoin="miter" />
+      <polygon points="10,72 13,77 7,77" fill="currentColor" />
+      
+      <line x1="50" y1="35" x2="50" y2="55" stroke="#a855f7" stroke-width="2" class="group-hover:-translate-y-6 transition-transform duration-[1.5s] ease-in-out" />
+    </svg>
+  </div>
 
-      <!-- Agent 项目 2 -->
-      <div @click.stop="router.push('/doc/auto-translator')" class="group/demo flex items-start gap-3 p-3 rounded-xl bg-white/60 dark:bg-zinc-900/60 border border-zinc-100 dark:border-zinc-800 hover:border-violet-200 dark:hover:border-violet-800/50 hover:bg-white dark:hover:bg-zinc-800 hover:shadow-sm transition-all duration-300 cursor-pointer">
-        <div class="w-10 h-10 rounded-lg bg-violet-50 dark:bg-violet-500/10 border border-violet-100 dark:border-violet-500/20 flex items-center justify-center shrink-0 group-hover/demo:scale-105 transition-transform">
-          <svg class="w-5 h-5 text-violet-600 dark:text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" /></svg>
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="flex justify-between items-center mb-0.5">
-            <span class="text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover/demo:text-violet-600 dark:group-hover/demo:text-violet-400 transition-colors">Auto-Translator Bot</span>
-            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-violet-100 dark:bg-violet-500/20 text-violet-600 dark:text-violet-400">Beta</span>
-          </div>
-          <p class="text-xs text-zinc-500 dark:text-zinc-400 truncate">基于上下文的多语言 Markdown 沉浸式翻译引擎</p>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- 底部: 快速操作链接 -->
-    <div class="relative z-10 pt-2 border-t border-zinc-200/50 dark:border-zinc-800/50">
-      <div class="flex items-center justify-between">
+  <div class="relative z-20 flex justify-between items-start mb-6 w-full pr-4">
+    <div class="flex items-start gap-3">
+      <svg class="w-6 h-6 text-indigo-500 mt-1" viewBox="0 0 24 24" fill="none">
+        <rect x="2" y="2" width="8" height="8" fill="currentColor" />
+        <rect x="14" y="14" width="8" height="8" fill="currentColor" fill-opacity="0.3" />
+        <path d="M 10 6 L 18 6 L 18 14" stroke="currentColor" stroke-width="2" stroke-linecap="square" />
+      </svg>
+      <div>
         <div class="flex items-center gap-3">
-          <span class="text-xs font-semibold text-zinc-500 dark:text-zinc-400">底层模型支持:</span>
-          <div class="flex -space-x-1.5">
-            <div class="w-5 h-5 rounded-full bg-indigo-100 border-2 border-white dark:border-zinc-900 flex items-center justify-center text-[8px] font-bold text-indigo-600 z-30">C3</div>
-            <div class="w-5 h-5 rounded-full bg-emerald-100 border-2 border-white dark:border-zinc-900 flex items-center justify-center text-[8px] font-bold text-emerald-600 z-20">G4</div>
-            <div class="w-5 h-5 rounded-full bg-blue-100 border-2 border-white dark:border-zinc-900 flex items-center justify-center text-[8px] font-bold text-blue-600 z-10">Gem</div>
+          <h3 class="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+            {{ $t('home.features.lab.title') }}
+          </h3>
+          <!-- Unified Tag -->
+          <div class="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-100/80 dark:bg-zinc-800/80 border border-zinc-200/50 dark:border-zinc-700/50 rounded-md text-[10px] font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-widest shadow-sm">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500/80"></span>
+            {{ totalExperiments }} PROJS
           </div>
         </div>
-        
-        <button class="flex items-center gap-1 text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors group/btn">
-          浏览全部实验
-          <svg class="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
-        </button>
+        <p class="text-xs font-medium text-zinc-500 mt-1">
+          {{ $t('home.features.lab.desc') }}
+        </p>
       </div>
     </div>
   </div>
+
+  <!-- Unified Timeline Tree Grid -->
+  <div class="relative z-10 flex-1 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 w-full mt-4">
+    
+    <!-- Column 1 -->
+    <div class="relative ml-3 pl-6 border-l border-zinc-200 dark:border-zinc-800 space-y-6">
+      <div v-for="(model, index) in col1" :key="model.id" @click="router.push('/doc/' + model.id)" class="relative group/item cursor-pointer">
+        <!-- 横线 -->
+        <div class="absolute -left-6 top-3 w-4 h-px bg-zinc-200 dark:bg-zinc-800 group-hover/item:bg-indigo-400 dark:group-hover/item:bg-indigo-600 transition-colors z-10"></div>
+        <!-- 节点 (绝对居中在竖线上) -->
+        <div class="absolute -left-[28px] top-2 w-2 h-2 bg-white dark:bg-[#050505] border-[1.5px] border-zinc-300 dark:border-zinc-700 rounded-full group-hover/item:border-indigo-500 transition-colors z-20 shadow-[0_0_0_2px_#ffffff] dark:shadow-[0_0_0_2px_#050505]"></div>
+
+        <div class="flex-1 min-w-0 pt-0.5">
+          <div class="flex items-center gap-2 mb-0.5">
+            <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200 group-hover/item:text-indigo-600 dark:group-hover/item:text-indigo-400 transition-colors line-clamp-1">
+              {{ model.title }}
+            </span>
+            <span v-if="model.version" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-sm tracking-wide bg-zinc-100 text-zinc-400 dark:bg-zinc-800 shrink-0">
+              {{ model.version }}
+            </span>
+          </div>
+          <p class="text-xs text-zinc-500 line-clamp-1 mt-1">{{ model.description || '探索实验功能' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Column 2 -->
+    <div class="relative ml-3 pl-6 border-l border-zinc-200 dark:border-zinc-800 space-y-6">
+      <div v-for="(model, index) in col2" :key="model.id" @click="router.push('/doc/' + model.id)" class="relative group/item cursor-pointer">
+        <!-- 横线 -->
+        <div class="absolute -left-6 top-3 w-4 h-px bg-zinc-200 dark:bg-zinc-800 group-hover/item:bg-fuchsia-400 dark:group-hover/item:bg-fuchsia-600 transition-colors z-10"></div>
+        <!-- 节点 (绝对居中在竖线上) -->
+        <div class="absolute -left-[28px] top-2 w-2 h-2 bg-white dark:bg-[#050505] border-[1.5px] border-zinc-300 dark:border-zinc-700 rounded-full group-hover/item:border-fuchsia-500 transition-colors z-20 shadow-[0_0_0_2px_#ffffff] dark:shadow-[0_0_0_2px_#050505]"></div>
+
+        <div class="flex-1 min-w-0 pt-0.5">
+          <div class="flex items-center gap-2 mb-0.5">
+            <span class="text-sm font-semibold text-zinc-900 dark:text-zinc-200 group-hover/item:text-fuchsia-600 dark:group-hover/item:text-fuchsia-400 transition-colors line-clamp-1">
+              {{ model.title }}
+            </span>
+            <span v-if="model.version" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-sm tracking-wide bg-zinc-100 text-zinc-400 dark:bg-zinc-800 shrink-0">
+              {{ model.version }}
+            </span>
+          </div>
+          <p class="text-xs text-zinc-500 line-clamp-1 mt-1">{{ model.description || '探索实验功能' }}</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="relative z-10 pt-4 mt-auto border-t border-zinc-200/60 dark:border-zinc-800/60 flex items-center justify-between">
+    <div class="flex items-center gap-2 text-[10px] font-mono font-bold text-zinc-400">
+      <span class="tracking-widest">MODULES:</span>
+      <span class="text-zinc-600 dark:text-zinc-300">{{ totalExperiments }}</span>
+      <span class="text-zinc-300 dark:text-zinc-700">/</span>
+      <span class="text-zinc-600 dark:text-zinc-300">Ready</span>
+    </div>
+    
+    <div class="flex items-center gap-1 text-[11px] font-bold text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors uppercase tracking-widest cursor-pointer" @click="router.push('/doc/' + (displayExperiments[0]?.id || ''))">
+      Explore All
+      <svg class="w-3 h-3 -translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+    </div>
+  </div>
+</div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { aiModels } from '@/data/home';
+import { docMenus } from '@/data/docs';
 
 const router = useRouter();
+
+const allExperiments = computed(() => docMenus[0]?.items || []);
+const displayExperiments = computed(() => allExperiments.value.slice(0, 6)); // Allow up to 6 items (3 per col)
+const totalExperiments = computed(() => allExperiments.value.length);
+
+// Split into two columns for density balance
+const col1 = computed(() => displayExperiments.value.filter((_, i) => i % 2 === 0));
+const col2 = computed(() => displayExperiments.value.filter((_, i) => i % 2 !== 0));
 </script>
 
 <style scoped>

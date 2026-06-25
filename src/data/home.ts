@@ -69,7 +69,7 @@ const icons = [
   ImagesOutline
 ];
 
-export const toolCategories: ToolCategory[] = NAV_DATA.slice(0, 6).map((cat, index) => {
+export const toolCategories: ToolCategory[] = NAV_DATA.slice(0, 8).map((cat, index) => {
   let displayName = cat.title.includes('.') ? cat.title.split('.').pop() || cat.title : cat.title;
   
   // Create mapping to match user's exact preferred names
@@ -112,5 +112,7 @@ export interface GameStat {
 export const gameStats: GameStat[] = [
   { label: '游戏数量', value: `${gamesData.length} 款` },
   { label: '总游玩次数', value: '12.5k' },
+  { label: '今日活跃', value: '342' },
+  { label: '最高连击', value: '98' },
   { label: '开发者', value: '1' }
 ];

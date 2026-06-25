@@ -1,16 +1,61 @@
 <template>
   <div class="nav-menu-wrapper w-full h-full flex" :class="mode === 'horizontal' ? 'justify-center items-center' : ''">
     
-    <!-- Desktop Horizontal Menu -->
-    <n-menu
-      v-if="mode === 'horizontal'"
-      :mode="mode"
-      :value="activeIndex"
-      :options="menuOptions"
-      @update:value="handleSelect"
-      class="border-none bg-transparent custom-n-menu"
-      :root-indent="24"
-    />
+    <!-- Custom Desktop Horizontal Menu -->
+    <div v-if="mode === 'horizontal'" class="flex items-stretch h-full gap-2">
+      <template v-for="item in mobileNavItems" :key="item.path">
+        
+        <!-- Dropdown for Parent -->
+        <n-dropdown 
+          v-if="item.children" 
+          :options="item.children.map(c => ({ key: c.path, label: c.label }))" 
+          @select="handleNavigate" 
+          trigger="hover"
+          placement="bottom"
+          :show-arrow="true"
+        >
+          <div 
+            class="relative h-full px-4 text-[15px] leading-none font-medium transition-colors duration-300 cursor-pointer flex items-center justify-center gap-1 select-none group"
+            :class="[
+              isChildActive(item)
+                ? 'text-purple-600 dark:text-purple-400' 
+                : 'text-zinc-600 hover:text-purple-600 dark:text-zinc-400 dark:hover:text-purple-400'
+            ]"
+          >
+            <!-- Gentle Hover Background -->
+            <div class="absolute inset-y-3 inset-x-1 rounded-lg bg-purple-50/80 dark:bg-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+            
+            <span class="z-10">{{ item.label }}</span>
+            <svg class="w-3.5 h-3.5 opacity-60 transition-transform z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+
+            <!-- Bottom Active Line -->
+            <div v-if="isChildActive(item)" class="absolute bottom-0 left-3 right-3 h-[3px] bg-purple-600 dark:bg-purple-400 rounded-t-full shadow-[0_-2px_8px_rgba(147,51,234,0.25)]"></div>
+          </div>
+        </n-dropdown>
+
+        <!-- Normal Item -->
+        <div v-else
+          @click="handleNavigate(item.path)"
+          class="relative h-full px-4 text-[15px] leading-none font-medium transition-colors duration-300 cursor-pointer flex items-center justify-center select-none group"
+          :class="[
+            activeIndex === item.path
+              ? 'text-purple-600 dark:text-purple-400' 
+              : 'text-zinc-600 hover:text-purple-600 dark:text-zinc-400 dark:hover:text-purple-400'
+          ]"
+        >
+          <!-- Gentle Hover Background -->
+          <div class="absolute inset-y-3 inset-x-1 rounded-lg bg-purple-50/80 dark:bg-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+          
+          <span class="z-10">{{ item.label }}</span>
+          
+          <!-- Bottom Active Line -->
+          <div v-if="activeIndex === item.path" class="absolute bottom-0 left-3 right-3 h-[3px] bg-purple-600 dark:bg-purple-400 rounded-t-full shadow-[0_-2px_8px_rgba(147,51,234,0.25)]"></div>
+        </div>
+
+      </template>
+    </div>
 
     <!-- Mobile Vertical Menu (Custom Elegant Implementation) -->
     <div v-else class="w-full flex flex-col gap-1 px-1 py-2">
