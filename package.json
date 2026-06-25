@@ -7,7 +7,7 @@
     "dev": "vite --open",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d dist -r https://github.com/NanChen042/vue3-blog.git -b gh-pages"
+    "deploy": "npm run build && gh-pages -d dist -t -r https://github.com/NanChen042/vue3-blog.git -b gh-pages"
   },
   "config": {
     "commitizen": {
@@ -23,11 +23,13 @@
     "amfe-flexible": "^2.2.1",
     "axios": "^1.13.6",
     "clsx": "^2.1.1",
+    "dompurify": "^3.4.11",
     "echarts": "^6.0.0",
     "highlight.js": "^11.11.1",
     "less": "^4.6.4",
     "less-loader": "^12.3.2",
     "markdown-it": "^14.2.0",
+    "marked": "^18.0.5",
     "mermaid": "^11.15.0",
     "motion": "^12.38.0",
     "naive-ui": "^2.44.1",
@@ -48,8 +50,10 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.2.2",
+    "@types/dompurify": "^3.2.0",
     "@types/markdown-it": "^14.1.2",
     "@types/markdown-it-highlightjs": "^4.0.1",
+    "@types/marked": "^6.0.0",
     "@types/node": "^25.5.0",
     "@vitejs/plugin-vue": "^6.0.5",
     "autoprefixer": "^10.4.27",
