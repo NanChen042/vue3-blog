@@ -8,35 +8,9 @@ export interface Post {
   coverUrl?: string;
 }
 
-export const recentPosts: Post[] = [
-  {
-    id: 'vue3-composition-api',
-    title: 'Vue 3 Composition API 最佳实践',
-    category: 'Vue',
-    date: '2 天前',
-    readTime: '8 分钟',
-    excerpt: '深入解析 Vue 3 Composition API 的使用技巧和最佳实践，包括响应式原理、生命周期和代码组织方式。',
-    coverUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&h=300&fit=crop'
-  },
-  {
-    id: 'tailwind-v4-new-features',
-    title: 'Tailwind CSS v4 新特性一览',
-    category: 'CSS',
-    date: '5 天前',
-    readTime: '5 分钟',
-    excerpt: 'Tailwind CSS v4 引入了众多激动人心的新特性，包括容器查询、CSS Native Layers 等前沿功能。',
-    coverUrl: 'https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=400&h=300&fit=crop'
-  },
-  {
-    id: 'typescript-advanced-types',
-    title: 'TypeScript 高级类型技巧',
-    category: 'TypeScript',
-    date: '1 周前',
-    readTime: '12 分钟',
-    excerpt: '掌握 TypeScript 高级类型系统：条件类型、映射类型、模板字面量类型等高级用法。',
-    coverUrl: 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=400&h=300&fit=crop'
-  }
-];
+import postsData from './posts.json';
+
+export const recentPosts: Post[] = postsData;
 
 import { NAV_DATA } from '@/views/Tools/data';
 import { gamesData } from '@/data/games';

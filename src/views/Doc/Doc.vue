@@ -7,30 +7,34 @@
         
         <!-- 左侧: 全局文档目录 (Left Sidebar) -->
         <div class="hidden lg:block w-64 shrink-0 py-10 pr-8 border-r border-zinc-200 dark:border-zinc-800/80">
-          <div class="sticky top-24">
-            <button @click="router.push('/home')" class="group flex items-center gap-2 mb-8 text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors">
-              <div class="w-7 h-7 rounded-full bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center group-hover:-translate-x-1 transition-transform">
-                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-              </div>
-              返回实验室
+          <div class="sticky top-[88px]">
+            <button @click="router.push('/home')" class="group flex items-center gap-2 px-3 py-1.5 -ml-3 mb-6 rounded-lg text-sm font-medium text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-zinc-800/50 transition-all">
+              <svg class="w-4 h-4 text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              返回首页
             </button>
 
             <!-- 动态渲染分类树 -->
-            <div v-for="category in docMenus" :key="category.title" class="mb-8">
-              <h4 class="text-xs font-semibold text-zinc-900 dark:text-white uppercase tracking-wider mb-3">{{ category.title }}</h4>
-              <ul class="space-y-2 border-l border-zinc-200 dark:border-zinc-800">
-                <li v-for="item in category.items" :key="item.id">
-                  <router-link :to="`/doc/${item.id}`" class="block pl-4 -ml-px border-l text-sm transition-colors" :class="[
-                    route.params.id === item.id 
-                      ? 'font-semibold active-nav-link' 
-                      : 'border-transparent hover:border-zinc-400 font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-300'
-                  ]">
-                    {{ item.title }}
-                  </router-link>
-                </li>
-              </ul>
+            <div class="overflow-y-auto max-h-[calc(100vh-12rem)] pr-2 -mr-2 scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-800">
+              <n-collapse :default-expanded-names="expandedCategories" accordion>
+                <n-collapse-item v-for="category in docMenus" :key="category.title" :name="category.title">
+                  <template #header>
+                    <span class="text-[11px] font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-widest">{{ getCategoryName(category.title) }}</span>
+                  </template>
+                  <ul class="space-y-1.5 border-l border-zinc-200 dark:border-zinc-800 ml-1 mt-1">
+                    <li v-for="item in category.items" :key="item.id">
+                      <router-link :to="`/doc/${item.id}`" class="block pl-4 -ml-px border-l text-[13px] leading-tight transition-colors py-1.5" :class="[
+                        route.params.id === item.id 
+                          ? 'font-semibold active-nav-link' 
+                          : 'border-transparent hover:border-zinc-400 font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-300'
+                      ]">
+                        {{ item.title }}
+                      </router-link>
+                    </li>
+                  </ul>
+                </n-collapse-item>
+              </n-collapse>
             </div>
 
           </div>
@@ -85,7 +89,7 @@
 
         <!-- 右侧: 单页目录 (Right Sidebar TOC) -->
         <div class="hidden xl:block w-64 shrink-0 py-10 pl-8">
-          <div class="sticky top-24">
+          <div class="sticky top-8">
             
             <!-- 文档主题切换器 -->
             <div class="mb-10">
@@ -158,10 +162,29 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick, onUnmounted, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { docMenus } from '@/data/docs';
+import { syncedDocMenus as docMenus } from '@/data/synced-docs';
 import { useStorage, useMutationObserver } from '@vueuse/core';
 import mermaid from 'mermaid';
-import { FlaskOutline } from '@vicons/ionicons5';
+import { FlaskOutline, MenuOutline } from '@vicons/ionicons5';
+
+const categoryMap: Record<string, string> = {
+  'Vue': 'Vue3 系列',
+  'AI': 'AI Agent',
+  'deepseek': 'DeepSeek',
+  'web': 'Web前端',
+  'ThreeJS': 'Three.js',
+  'Games': '游戏开发',
+  'NodeJS': '后端专栏',
+  'harmony-os-4.0-series': 'HarmonyOS 4.0',
+  'Algorithm': '算法'
+};
+
+const getCategoryName = (key: string) => categoryMap[key] || key;
+
+const expandedCategories = computed(() => {
+  const activeCategory = docMenus.find(cat => cat.items.some(item => item.id === route.params.id));
+  return activeCategory ? [activeCategory.title] : (docMenus[0] ? [docMenus[0].title] : []);
+});
 
 defineOptions({ name: 'DocViewer' });
 

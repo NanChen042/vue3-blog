@@ -17,7 +17,8 @@ export default {
     visual: '可视化工具',
     design: '设计资源',
     ai: 'AI工具',
-    api: '接口服务'
+    api: '接口服务',
+    unit: '个工具'
   },
   header: {
     search: 'AI 搜索...',

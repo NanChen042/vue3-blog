@@ -1,6 +1,6 @@
 <template>
   <!-- AI 实验 - 大卡片 -->
-<div class="md:col-span-2 group relative overflow-hidden rounded-[3px] bg-white dark:bg-[#050505] border border-[#efeff5] dark:border-[rgba(255,255,255,0.09)] hover:shadow-[0_3px_12px_rgba(0,0,0,0.08)] dark:hover:shadow-[0_3px_12px_rgba(0,0,0,0.3)] transition-all duration-300 p-7 flex flex-col justify-between min-h-[360px] cursor-pointer">
+<div class="md:col-span-2 group relative overflow-hidden rounded-xl bg-white/60 dark:bg-[#1a1523]/60 backdrop-blur-xl border border-white/80 dark:border-white/5 shadow-[0_8px_30px_rgba(139,92,246,0.04)] hover:shadow-[0_12px_40px_rgba(139,92,246,0.08)] dark:hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] transition-all duration-300 p-7 flex flex-col justify-between min-h-[360px] cursor-pointer">
 
   <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-[0.03] dark:opacity-[0.08] group-hover:opacity-[0.12] transition-opacity duration-1000" xmlns="http://www.w3.org/2000/svg">
     <defs>

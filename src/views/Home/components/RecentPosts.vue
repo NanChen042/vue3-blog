@@ -1,8 +1,8 @@
 <template>
-<div class="md:col-span-1 group relative overflow-hidden rounded-[3px] bg-white dark:bg-[#09090B] border border-[#efeff5] dark:border-[rgba(255,255,255,0.09)] hover:shadow-[0_3px_12px_rgba(0,0,0,0.08)] dark:hover:shadow-[0_3px_12px_rgba(0,0,0,0.3)] transition-all duration-300 cursor-pointer p-7 flex flex-col min-h-[360px]" @click="router.push('/blog')">
+<div class="md:col-span-1 group relative overflow-hidden rounded-xl bg-white/60 dark:bg-[#1a1523]/60 backdrop-blur-xl border border-white/80 dark:border-white/5 shadow-[0_8px_30px_rgba(139,92,246,0.04)] hover:shadow-[0_12px_40px_rgba(139,92,246,0.08)] dark:hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] transition-all duration-300 cursor-pointer p-7 flex flex-col min-h-[360px]" @click="router.push('/blog')">
 
   <!-- 高级背景：精细书写画布效果 (Premium Canvas Board) -->
-  <div class="absolute inset-0 pointer-events-none overflow-hidden transition-all duration-700 bg-white dark:bg-transparent">
+  <div class="absolute inset-0 pointer-events-none overflow-hidden transition-all duration-700 bg-transparent">
     <!-- SVG 极简白噪点纸质肌理 -->
     <svg class="absolute inset-0 w-full h-full opacity-[0.2] dark:opacity-[0.1] mix-blend-overlay">
       <filter id="noiseFilter">

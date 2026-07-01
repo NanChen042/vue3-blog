@@ -8,13 +8,28 @@ const themeStore = useThemeStore();
 const theme = computed(() => (themeStore.isDark ? darkTheme : null));
 
 const themeOverrides = computed<GlobalThemeOverrides>(() => {
-  const primary = themeStore.primaryColor;
   return {
     common: {
-      primaryColor: primary,
-      primaryColorHover: '#9333ea', // Slightly lighter/different for hover
-      primaryColorPressed: '#6b21a8',
-      primaryColorSuppl: primary,
+      primaryColor: '#8b5cf6',
+      primaryColorHover: '#a78bfa',
+      primaryColorPressed: '#7c3aed',
+      primaryColorSuppl: '#8b5cf6',
+      borderRadius: '0px',
+      borderRadiusSmall: '0px',
+    },
+    Button: {
+      borderRadiusMedium: '0px',
+      borderRadiusLarge: '0px',
+      borderRadiusSmall: '0px',
+    },
+    Input: {
+      borderRadius: '0px',
+    },
+    Tag: {
+      borderRadius: '0px',
+    },
+    Card: {
+      borderRadius: '0px',
     },
   };
 });

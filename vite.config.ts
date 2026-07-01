@@ -46,6 +46,9 @@ export default defineConfig({
     dts: './src/auto-import.d.ts',
   })
   ],
+  optimizeDeps: {
+    include: ['mermaid']
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

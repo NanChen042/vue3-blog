@@ -17,7 +17,8 @@ export default {
     visual: 'Data Visualization',
     design: 'Design Resources',
     ai: 'AI Tools',
-    api: 'API Services'
+    api: 'API Services',
+    unit: 'TOOLS'
   },
   header: {
     search: 'AI Search...',

@@ -1,11 +1,11 @@
 <template>
-  <div class="bg-[#fafafa] dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 selection:bg-purple-500/30">
-    <div class="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex items-start">
+  <div style="color: var(--db-text-primary)">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-start">
       
-      <aside class="hidden lg:flex flex-col w-[260px] shrink-0 sticky top-[24px] h-[calc(100vh-144px)] pt-6 pb-8 border-r border-zinc-200/60 dark:border-white/5 pr-6 self-start">
+      <aside class="hidden lg:flex flex-col w-[240px] shrink-0 sticky top-[88px] h-[calc(100vh-144px)] pt-6 pb-8 pr-6 self-start" style="border-right: 1px solid var(--db-card-border);">
         <div class="mb-8 px-3 flex items-center gap-2.5">
-          <div class="w-1.5 h-4 bg-purple-500 rounded-full shadow-[0_0_8px_rgba(168,85,247,0.5)]"></div>
-          <h2 class="text-[15px] font-bold text-zinc-800 dark:text-zinc-100 tracking-wide">
+          <div class="w-1.5 h-4 rounded-full" style="background: var(--db-accent);"></div>
+          <h2 class="text-[15px] font-bold tracking-wide" style="color: var(--db-text-primary)">
             发现工具
           </h2>
         </div>
@@ -20,11 +20,11 @@
       </aside>
 
       <main class="flex-1 min-w-0 lg:pl-16 pt-12 pb-32">
-        <header class="mb-16">
-          <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-clip-text text-transparent bg-gradient-to-r from-zinc-900 to-zinc-500 dark:from-white dark:to-zinc-500">
+        <header class="mb-12">
+          <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight mb-3" style="color: var(--db-text-primary)">
             {{ $t('nav.tools') || '开发者工具箱' }}
           </h1>
-          <p class="text-lg text-zinc-500 dark:text-zinc-400 max-w-2xl font-medium">
+          <p class="text-base max-w-2xl font-medium" style="color: var(--db-text-muted)">
             精选开发资源、框架文档与在线工具，助力高效构建现代 Web 应用。
           </p>
         </header>
@@ -37,12 +37,12 @@
             class="category-section"
           >
             <div class="flex items-center gap-4 mb-5">
-              <h2 class="text-xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100">
+              <h2 class="text-xl font-bold tracking-tight" style="color: var(--db-text-primary)">
                 {{ $t(category.title) || category.title }}
               </h2>
-              <div class="flex-1 h-[1px] bg-gradient-to-r from-zinc-200 to-transparent dark:from-white/10"></div>
-              <span class="px-2.5 py-1 rounded-md bg-zinc-100 dark:bg-white/5 text-zinc-500 dark:text-zinc-400 text-xs font-semibold tracking-wider">
-                {{ category.items.length }} TOOLS
+              <div class="flex-1 h-px" style="background: var(--db-card-border);"></div>
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold" style="background: rgba(0,0,0,0.05); color: var(--db-text-muted)">
+                {{ category.items.length }} {{ $t('tools.unit') || 'TOOLS' }}
               </span>
             </div>
 

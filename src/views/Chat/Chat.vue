@@ -1,24 +1,34 @@
 <template>
-  <div class="h-full w-full flex bg-[#fafafa] dark:bg-[#0a0a0a] text-zinc-900 dark:text-zinc-100 overflow-hidden relative">
+  <div class="h-full w-full flex overflow-hidden relative" style="color: var(--db-text-primary)">
 
     <!-- Sidebar -->
-    <div class="w-80 shrink-0 border-r border-zinc-200/60 dark:border-white/5 flex flex-col bg-white dark:bg-black/20 z-10 transition-colors">
+    <div class="w-80 shrink-0 flex flex-col z-10 transition-colors" style="border-right: 1px solid var(--db-card-border); background: var(--db-card-bg); backdrop-filter: blur(16px);">
 
       <!-- Top Switcher -->
-      <div class="p-4 border-b border-zinc-200/60 dark:border-white/5">
-        <div class="flex p-1 bg-zinc-100 dark:bg-zinc-800/50 rounded-xl">
-          <button
+      <div class="p-4" style="border-bottom: 1px solid var(--db-card-border);">
+        <div class="flex p-1 rounded-lg gap-1" style="background: rgba(0,0,0,0.05);">
+          <n-button
             @click="activeView = 'ai'"
-            class="flex-1 py-1.5 text-sm font-semibold rounded-lg transition-all text-center"
-            :class="activeView === 'ai' ? 'bg-white dark:bg-zinc-700 shadow-sm text-indigo-600 dark:text-indigo-400' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'">
+            class="flex-1"
+            :type="activeView === 'ai' ? 'primary' : 'default'"
+            :secondary="activeView !== 'ai'"
+            :quaternary="activeView !== 'ai'"
+            style="border-radius: 6px; font-weight: 600;"
+            :style="activeView === 'ai' ? 'background: var(--db-nav-active-bg); color: var(--db-nav-active-text);' : 'color: var(--db-text-muted);'"
+          >
             {{ $t('chat.ai_personas') }}
-          </button>
-          <button
+          </n-button>
+          <n-button
             @click="activeView = 'live'"
-            class="flex-1 py-1.5 text-sm font-semibold rounded-lg transition-all text-center"
-            :class="activeView === 'live' ? 'bg-white dark:bg-zinc-700 shadow-sm text-emerald-600 dark:text-emerald-400' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'">
+            class="flex-1"
+            :type="activeView === 'live' ? 'primary' : 'default'"
+            :secondary="activeView !== 'live'"
+            :quaternary="activeView !== 'live'"
+            style="border-radius: 6px; font-weight: 600;"
+            :style="activeView === 'live' ? 'background: var(--db-nav-active-bg); color: var(--db-nav-active-text);' : 'color: var(--db-text-muted);'"
+          >
             {{ $t('chat.live_rooms') }}
-          </button>
+          </n-button>
         </div>
       </div>
 
@@ -74,27 +84,33 @@
         </div>
 
         <!-- Settings link -->
-        <button
+        <n-button
+          block
+          size="large"
           @click="router.push('/settings')"
-          class="w-full flex items-center gap-3 p-3.5 rounded-lg bg-zinc-50/60 dark:bg-zinc-900/40 border border-transparent hover:border-zinc-200 dark:hover:border-zinc-700 text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-all text-sm font-medium group">
-          <div class="w-11 h-11 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center shrink-0 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-500/10 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
+          style="border-radius: 8px; justify-content: flex-start; height: auto; padding: 12px 14px;"
+          quaternary
+        >
+          <div class="flex items-center gap-3 w-full" style="color: var(--db-text-secondary);">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors" style="background: rgba(0,0,0,0.05);">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+            </div>
+            <span class="font-semibold">{{ $t('chat.ai_settings') }}</span>
+            <svg class="w-4 h-4 ml-auto opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </div>
-          <span>{{ $t('chat.ai_settings') }}</span>
-          <svg class="w-4 h-4 ml-auto opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        </button>
+        </n-button>
       </div>
 
       <!-- Live Rooms List -->
       <div v-else class="flex-1 overflow-y-auto p-3 space-y-1 flex flex-col">
         <div class="flex items-center justify-between px-2 pb-2">
-          <h3 class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{{ $t('chat.public_channels') }}</h3>
-          <button @click="createRoom" class="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 text-xs font-bold bg-emerald-50 dark:bg-emerald-500/10 px-2.5 py-1 rounded-md transition-colors">
+          <h3 class="text-[10px] font-bold uppercase tracking-widest" style="color: var(--db-text-muted);">{{ $t('chat.public_channels') }}</h3>
+          <n-button @click="createRoom" size="small" style="background: rgba(0,0,0,0.06); border:none; color: var(--db-text-primary); border-radius: 6px; font-weight: 700;">
             {{ $t('chat.new_room') }}
-          </button>
+          </n-button>
         </div>
 
         <div
@@ -102,7 +118,7 @@
           @click="selectChat(room, 'live')"
           class="flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all"
           :class="activeSession?.id === room.id ? 'bg-emerald-50 dark:bg-emerald-500/10' : 'hover:bg-zinc-50 dark:hover:bg-white/5'">
-            <div class="w-10 h-10 rounded-lg bg-linear-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold text-lg shadow-inner">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 font-bold text-base" style="background: rgba(0,0,0,0.08); color: var(--db-text-secondary);">
             #
           </div>
           <div class="flex-1 min-w-0">
