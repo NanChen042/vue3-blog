@@ -5,7 +5,7 @@
       <!-- 关卡选择 -->
       <div class="flex items-center gap-2">
         <button
-          v-for="(lvl, i) in levels"
+          v-for="(_, i) in levels"
           :key="i"
           @click="loadLevel(i)"
           class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all border"
@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
 
 const CELL = 40;
 const CANVAS_W = 8 * CELL;

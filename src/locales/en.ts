@@ -37,6 +37,7 @@ export default {
   },
   // --- 新增的主页翻译区块 ---
   home: {
+    search_placeholder: 'Search articles or tools...',
     hero: {
       badge: 'v2.0 · Minor Updates',
       title_prefix: 'Just Trying',

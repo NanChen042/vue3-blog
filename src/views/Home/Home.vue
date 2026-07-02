@@ -1,10 +1,14 @@
 <template>
   <div 
-    class="min-h-screen bg-[#f8f9fa] dark:bg-[#09090b] transition-colors duration-300 relative pt-16 pb-12 overflow-hidden"
+    class="min-h-screen transition-colors duration-300 relative pt-16 pb-12 overflow-hidden"
     @contextmenu.prevent="openContextMenu"
   >
-    <!-- Subtlest background pattern -->
-    <div class="absolute inset-0 z-0 pointer-events-none opacity-40 dark:opacity-20 bento-grid-bg"></div>
+    <!-- Background ambient blobs (Restored) -->
+    <div class="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-indigo-400/20 dark:bg-indigo-500/10 blur-[120px] animate-blob z-0"></div>
+    <div class="pointer-events-none absolute top-1/2 right-10 w-[500px] h-[500px] rounded-full bg-violet-400/20 dark:bg-violet-500/10 blur-[120px] animate-blob animation-delay-2000 z-0"></div>
+
+    <!-- Noise SVG Overlay (Restored) -->
+    <div class="pointer-events-none absolute inset-0 noise-overlay opacity-[0.02] dark:opacity-[0.03] z-0"></div>
 
     <!-- Naive UI Context Menu -->
     <n-dropdown
@@ -20,18 +24,18 @@
 
     <div class="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6">
       <main class="w-full min-w-0">
-        <!-- Giant Top Clock -->
-        <div class="flex flex-col items-center justify-center pt-2 pb-6 cursor-default">
-          <div class="text-[5.5rem] sm:text-[7rem] font-black text-zinc-900 dark:text-white leading-none tracking-tighter drop-shadow-sm font-sans flex items-baseline">
+        <!-- Giant Top Clock (Fixed Background Watermark) -->
+        <div class="fixed inset-0 flex flex-col items-center pt-[15vh] pointer-events-none select-none z-0">
+          <div class="text-[5.5rem] sm:text-[7rem] font-bold text-zinc-900 dark:text-white drop-shadow-sm leading-none tracking-tighter font-sans flex items-baseline">
             <span>{{ topTime }}</span>
           </div>
-          <div class="text-sm font-bold text-zinc-500 tracking-widest uppercase mt-2">
-            {{ topDate }}
+          <div class="text-lg sm:text-xl font-semibold text-zinc-500 dark:text-zinc-400 tracking-widest mt-2 sm:mt-1">
+            {{ topDate }} <span class="mx-2 sm:mx-3 font-light opacity-50">|</span> {{ topDay }}
           </div>
         </div>
 
         <!-- Spotlight Search Bar -->
-        <div class="flex justify-center mb-10 relative z-50">
+        <div class="flex justify-center mb-10 mt-[18vh] relative z-50">
           <div class="w-full max-w-xl">
             <GlobalSearch />
           </div>
@@ -120,7 +124,8 @@
 <script setup lang="ts">
 import { h, ref, onMounted, onUnmounted, nextTick } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
-import { NDropdown, NModal, NTabs, NTabPane, NCard, NText, NTag } from 'naive-ui';
+import { NDropdown, NModal, NTabs, NTabPane } from 'naive-ui';
+import type { DropdownOption } from 'naive-ui';
 
 // Widgets
 import GlobalSearch from './components/widgets/GlobalSearch.vue';
@@ -165,10 +170,17 @@ const getWidgetsByTab = (tabName: string) => widgetStoreConfig.filter(w => w.tab
 // Giant Top Clock logic
 const topTime = ref('');
 const topDate = ref('');
+const topDay = ref('');
+
 const updateTopClock = () => {
   const now = new Date();
   topTime.value = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
-  topDate.value = now.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric', weekday: 'long' });
+  
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  
+  topDate.value = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+  topDay.value = days[now.getDay()];
 };
 
 let timer: number;
@@ -184,7 +196,6 @@ onUnmounted(() => {
 const defaultLayout = [
   { id: 'c1', type: 'ChatWidget', size: '2x2', spanClass: 'col-span-2 row-span-2' },
   { id: 'b1', type: 'BlogWidget', size: '2x2', spanClass: 'col-span-2 row-span-2' },
-  { id: 'g1', type: 'GameWidget', size: '2x2', spanClass: 'col-span-2 row-span-2' },
   { id: '1', type: 'ClockWidget', size: '2x2', spanClass: 'col-span-2 row-span-2' },
   { id: '2', type: 'WeatherWidget', size: '2x2', spanClass: 'col-span-2 row-span-2' },
   { id: '3', type: 'CalendarWidget', size: '2x2', spanClass: 'col-span-2 row-span-2' },
@@ -249,19 +260,18 @@ const addWidget = (type: string, size: string) => {
 
 // Desktop Context Menu Logic
 const showContextMenu = ref(false);
-const showWidgetContext = ref(false);
 const menuX = ref(0);
 const menuY = ref(0);
 const activeWidgetId = ref<string | null>(null);
 const currentWidgetSize = ref('2x2');
 
-const desktopContextOptions = [
+const desktopContextOptions: DropdownOption[] = [
   { label: '添加小组件', key: 'add' },
   { type: 'divider', key: 'd1' },
   { label: '恢复默认布局', key: 'reset' }
 ];
 
-const contextOptions = ref(desktopContextOptions);
+const contextOptions = ref<DropdownOption[]>(desktopContextOptions);
 
 const openContextMenu = (e: MouseEvent) => {
   contextOptions.value = desktopContextOptions;
@@ -309,6 +319,7 @@ const openWidgetContextMenu = (e: MouseEvent, id: string) => {
     contextOptions.value = [
       {
         key: 'size_selector',
+        type: 'render',
         render: renderSizePills
       },
       { type: 'divider', key: 'd1' },
@@ -355,18 +366,27 @@ const deleteActiveWidget = () => {
 </script>
 
 <style scoped>
-/* 最轻微的网格背景 */
-.bento-grid-bg {
-  background-image: 
-    linear-gradient(to right, rgba(0,0,0,0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0,0,0,0.04) 1px, transparent 1px);
-  background-size: 32px 32px;
+/* 最轻微的网格背景已迁移至全局 style.css */
+/* 极光流体呼吸动画 */
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(40px, -60px) scale(1.1); }
+  66% { transform: translate(-30px, 30px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
 }
-:global(.dark) .bento-grid-bg {
-  background-image: 
-    linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+
+.animate-blob {
+  animation: blob 15s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.animation-delay-2000 {
+  animation-delay: 4s;
+}
+
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s ease, transform 0.2s ease;

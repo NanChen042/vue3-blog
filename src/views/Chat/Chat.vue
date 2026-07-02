@@ -1,287 +1,302 @@
 <template>
-  <div class="h-full w-full flex overflow-hidden relative" style="color: var(--db-text-primary)">
+  <div class="h-full w-full flex items-center justify-center p-4 sm:p-6" style="color: var(--db-text-primary)">
+    <div class="w-full max-w-[1280px] h-full bg-white dark:bg-[#09090b] border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl shadow-xl dark:shadow-none flex overflow-hidden relative">
 
-    <!-- Sidebar -->
-    <div class="w-80 shrink-0 flex flex-col z-10 transition-colors" style="border-right: 1px solid var(--db-card-border); background: var(--db-card-bg); backdrop-filter: blur(16px);">
+      <!-- Sidebar -->
+      <div class="w-80 shrink-0 flex flex-col z-10 transition-colors" style="border-right: 1px solid var(--db-card-border); background: var(--db-card-bg); backdrop-filter: blur(16px);">
 
-      <!-- Top Switcher -->
-      <div class="p-4" style="border-bottom: 1px solid var(--db-card-border);">
-        <div class="flex p-1 rounded-lg gap-1" style="background: rgba(0,0,0,0.05);">
-          <n-button
-            @click="activeView = 'ai'"
-            class="flex-1"
-            :type="activeView === 'ai' ? 'primary' : 'default'"
-            :secondary="activeView !== 'ai'"
-            :quaternary="activeView !== 'ai'"
-            style="border-radius: 6px; font-weight: 600;"
-            :style="activeView === 'ai' ? 'background: var(--db-nav-active-bg); color: var(--db-nav-active-text);' : 'color: var(--db-text-muted);'"
-          >
-            {{ $t('chat.ai_personas') }}
-          </n-button>
-          <n-button
-            @click="activeView = 'live'"
-            class="flex-1"
-            :type="activeView === 'live' ? 'primary' : 'default'"
-            :secondary="activeView !== 'live'"
-            :quaternary="activeView !== 'live'"
-            style="border-radius: 6px; font-weight: 600;"
-            :style="activeView === 'live' ? 'background: var(--db-nav-active-bg); color: var(--db-nav-active-text);' : 'color: var(--db-text-muted);'"
-          >
-            {{ $t('chat.live_rooms') }}
-          </n-button>
+        <!-- Top Switcher -->
+        <div class="p-4" style="border-bottom: 1px solid var(--db-card-border);">
+          <n-tabs type="segment" size="small" v-model:value="activeView">
+            <n-tab name="ai" :tab="$t('chat.ai_personas')" />
+            <n-tab name="live" :tab="$t('chat.live_rooms')" />
+          </n-tabs>
         </div>
-      </div>
 
-      <!-- AI Persona List -->
-      <div v-if="activeView === 'ai'" class="flex-1 overflow-y-auto p-3 space-y-2">
-        <div
-          v-for="persona in aiPersonas"
-          :key="persona.id"
-          @click="selectChat(persona, 'ai')"
-          class="group relative overflow-hidden rounded-lg cursor-pointer transition-all duration-300 border"
-          :class="activeSession?.id === persona.id
-            ? `${personaBorderClass(persona.color)} bg-${persona.color}-50 dark:bg-${persona.color}-500/10 shadow-sm`
-            : 'border-transparent bg-zinc-50/60 dark:bg-zinc-900/40 hover:bg-zinc-100/80 dark:hover:bg-zinc-800/50 hover:border-zinc-200 dark:hover:border-zinc-700'">
+        <!-- AI Persona List -->
+        <div v-if="activeView === 'ai'" class="flex-1 overflow-y-auto p-3 space-y-1.5 flex flex-col">
+          <div
+            v-for="persona in aiPersonas"
+            :key="persona.id"
+            @click="selectChat(persona, 'ai')"
+            class="group relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 border"
+            :class="activeSession?.id === persona.id
+              ? 'border-indigo-100 dark:border-indigo-900/30 bg-indigo-50/40 dark:bg-indigo-950/20 shadow-xs'
+              : 'border-transparent bg-transparent hover:bg-zinc-100/50 dark:hover:bg-zinc-800/20'"
+          >
+            <!-- Active Indicator Bar -->
+            <div 
+              v-if="activeSession?.id === persona.id" 
+              class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-indigo-600 dark:bg-indigo-500 rounded-r-full"
+            ></div>
 
-          <div class="flex items-start gap-3 p-3.5">
-            <!-- Avatar -->
-            <div class="relative shrink-0">
-              <n-avatar round :size="44" :src="persona.avatar" class="border-2" :class="personaBorderClass(persona.color)" />
-              <div class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-zinc-900" :class="personaDotColor(persona.color)"></div>
-            </div>
-
-            <!-- Info -->
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-2 mb-0.5">
-                <h4 class="text-sm font-bold text-zinc-900 dark:text-white truncate leading-none">
-                  {{ locale === 'zh' ? persona.nameZh : persona.name }}
-                </h4>
-                <n-tag size="small" :bordered="false" round :type="personaNaiveType(persona.color) as any" class="shrink-0 font-bold uppercase tracking-wider scale-90 origin-left">
-                  {{ locale === 'zh' ? persona.badgeZh : persona.badge }}
-                </n-tag>
+            <div class="flex items-start gap-3.5 p-3">
+              <!-- Avatar -->
+              <div class="relative shrink-0">
+                <n-avatar round :size="40" :src="persona.avatar" class="border border-zinc-200/60 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950" />
+                <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-zinc-900" :class="personaDotColor(persona.color)"></div>
               </div>
-              <p class="text-[11px] text-zinc-500 dark:text-zinc-400 truncate leading-relaxed">
-                {{ locale === 'zh' ? persona.taglineZh : persona.tagline }}
-              </p>
-            </div>
-          </div>
 
-          <!-- Capabilities tags (shown when selected) -->
-          <div v-if="activeSessionId === persona.id" class="px-3.5 pb-3.5 -mt-1">
-            <div class="flex flex-wrap gap-1.5">
-              <n-tag
-                v-for="cap in (locale === 'zh' ? persona.capabilitiesZh : persona.capabilities)"
-                :key="cap"
-                size="small"
-                :bordered="false"
-                :type="personaNaiveType(persona.color) as any"
-                class="font-medium"
-              >
-                {{ cap }}
-              </n-tag>
+              <!-- Info -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between mb-1">
+                  <h4 
+                    class="text-xs font-bold truncate leading-none transition-colors"
+                    :class="activeSession?.id === persona.id ? 'text-indigo-600 dark:text-indigo-400' : 'text-zinc-800 dark:text-zinc-200'"
+                  >
+                    {{ locale === 'zh' ? persona.nameZh : persona.name }}
+                  </h4>
+                  <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-md scale-95 origin-right transition-colors" :class="badgeClass(persona.color)">
+                    {{ locale === 'zh' ? persona.badgeZh : persona.badge }}
+                  </span>
+                </div>
+                <p class="text-[11px] text-zinc-400 dark:text-zinc-500 truncate leading-relaxed">
+                  {{ locale === 'zh' ? persona.taglineZh : persona.tagline }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Settings link -->
-        <n-button
-          block
-          size="large"
-          @click="router.push('/settings')"
-          style="border-radius: 8px; justify-content: flex-start; height: auto; padding: 12px 14px;"
-          quaternary
-        >
-          <div class="flex items-center gap-3 w-full" style="color: var(--db-text-secondary);">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors" style="background: rgba(0,0,0,0.05);">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+        <!-- Live Rooms List -->
+        <div v-else class="flex-1 overflow-y-auto p-3 space-y-1.5 flex flex-col">
+          <div class="flex items-center justify-between px-2 pb-2">
+            <h3 class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">{{ $t('chat.public_channels') }}</h3>
+            <n-button 
+              size="tiny"
+              secondary
+              @click="createRoom"
+            >
+              {{ $t('chat.new_room') }}
+            </n-button>
+          </div>
+
+          <div
+            v-for="room in liveRooms" :key="room.id"
+            @click="selectChat(room, 'live')"
+            class="group relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 border"
+            :class="activeSession?.id === room.id 
+              ? 'border-indigo-100 dark:border-indigo-900/30 bg-indigo-50/40 dark:bg-indigo-950/20 shadow-xs' 
+              : 'border-transparent bg-transparent hover:bg-zinc-100/50 dark:hover:bg-zinc-800/20'">
+            <!-- Active Indicator Bar -->
+            <div 
+              v-if="activeSession?.id === room.id" 
+              class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-indigo-600 dark:bg-indigo-500 rounded-r-full"
+            ></div>
+
+            <div class="flex items-center gap-3.5 p-3">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 font-bold text-base bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400">
+                #
+              </div>
+              <div class="flex-1 min-w-0">
+                <h4 
+                  class="text-xs font-bold truncate leading-none mb-1 transition-colors"
+                  :class="activeSession?.id === room.id ? 'text-indigo-600 dark:text-indigo-400' : 'text-zinc-800 dark:text-zinc-200'"
+                >
+                  {{ room.name }}
+                </h4>
+                <p class="text-[10px] text-zinc-450 dark:text-zinc-500 truncate">{{ room.online }} {{ $t('chat.online') }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Pinned to Bottom -->
+        <div class="p-3 border-t border-zinc-200/50 dark:border-zinc-800/50 bg-zinc-50/20 dark:bg-zinc-900/10 shrink-0">
+          <button
+            type="button"
+            @click="router.push('/settings')"
+            class="w-full flex items-center gap-3 p-2.5 rounded-xl text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-100/60 dark:hover:bg-zinc-800/40 transition-all outline-none"
+          >
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-zinc-100 dark:bg-zinc-800/60 text-zinc-500 dark:text-zinc-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
               </svg>
             </div>
-            <span class="font-semibold">{{ $t('chat.ai_settings') }}</span>
-            <svg class="w-4 h-4 ml-auto opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-          </div>
-        </n-button>
-      </div>
-
-      <!-- Live Rooms List -->
-      <div v-else class="flex-1 overflow-y-auto p-3 space-y-1 flex flex-col">
-        <div class="flex items-center justify-between px-2 pb-2">
-          <h3 class="text-[10px] font-bold uppercase tracking-widest" style="color: var(--db-text-muted);">{{ $t('chat.public_channels') }}</h3>
-          <n-button @click="createRoom" size="small" style="background: rgba(0,0,0,0.06); border:none; color: var(--db-text-primary); border-radius: 6px; font-weight: 700;">
-            {{ $t('chat.new_room') }}
-          </n-button>
-        </div>
-
-        <div
-          v-for="room in liveRooms" :key="room.id"
-          @click="selectChat(room, 'live')"
-          class="flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all"
-          :class="activeSession?.id === room.id ? 'bg-emerald-50 dark:bg-emerald-500/10' : 'hover:bg-zinc-50 dark:hover:bg-white/5'">
-            <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 font-bold text-base" style="background: rgba(0,0,0,0.08); color: var(--db-text-secondary);">
-            #
-          </div>
-          <div class="flex-1 min-w-0">
-            <h4 class="text-sm font-bold text-zinc-900 dark:text-white truncate">{{ room.name }}</h4>
-            <p class="text-[11px] text-zinc-500 truncate">{{ room.online }} {{ $t('chat.online') }}</p>
-          </div>
+            <span class="text-xs font-semibold">{{ $t('chat.ai_settings') }}</span>
+            <svg class="w-3.5 h-3.5 ml-auto opacity-50 text-zinc-400 group-hover:text-zinc-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </button>
         </div>
       </div>
-    </div>
 
     <!-- Main Chat Area -->
-    <div class="flex-1 flex flex-col min-w-0 relative bg-[#fafafa] dark:bg-[#050505] z-0 transition-colors">
+    <div class="flex-1 flex flex-col min-w-0 relative bg-white dark:bg-[#09090b] z-0 transition-colors">
 
       <template v-if="activeSession">
         <!-- Chat Header -->
-        <header class="h-16 shrink-0 border-b border-zinc-200/60 dark:border-white/5 flex items-center justify-between px-6 bg-white/60 dark:bg-[#050505]/60 backdrop-blur-xl z-20 absolute top-0 w-full transition-colors">
-          <div class="flex items-center gap-3">
-            <n-avatar round v-if="activeMode === 'ai'" :size="32" :src="activePersona?.avatar" class="border border-zinc-200 dark:border-zinc-700" />
-            <div v-else class="w-8 h-8 rounded-lg bg-linear-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold text-sm">#</div>
-            <h2 class="font-bold text-base text-zinc-800 dark:text-zinc-100">
+        <header class="h-14 flex items-center justify-between px-6 border-b border-transparent hover:border-zinc-200/50 dark:hover:border-zinc-800/50 transition-colors shrink-0 z-10 bg-white/85 dark:bg-[#09090b]/85 backdrop-blur-md sticky top-0 w-full">
+          <div class="flex items-center gap-2.5">
+            <span class="text-zinc-850 dark:text-zinc-100 font-semibold text-sm">
               {{ activeMode === 'ai' ? (locale === 'zh' ? activePersona?.nameZh : activePersona?.name) : activeRoomName }}
-            </h2>
-            <span v-if="activeMode === 'live'" class="px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
+            </span>
+            <span v-if="activeMode === 'live'" class="px-1.5 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-semibold border border-emerald-100 dark:border-emerald-900/30 uppercase tracking-wider">
               {{ $t('chat.live') }}
             </span>
-            <span v-else class="px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-wider">
-              {{ $t('chat.ai_bot') }}
+            <span v-else class="px-1.5 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-550 dark:text-zinc-450 text-[10px] font-semibold border border-zinc-200 dark:border-zinc-700/30 uppercase tracking-wider">
+              AI Agent
             </span>
           </div>
-          <button @click="clearHistory" class="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 font-medium flex items-center gap-1.5 transition-colors px-3 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-            {{ $t('chat.clear_chat') }}
+          <button @click="clearHistory" class="p-2 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors outline-none" :title="$t('chat.clear_chat')">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
           </button>
         </header>
 
-        <!-- Messages Area -->
-        <div class="flex-1 overflow-y-auto px-6 pt-20 pb-4 space-y-5 scroll-smooth" ref="messagesContainer">
-
-          <!-- API not configured notice -->
-          <div v-if="activeMode === 'ai' && !hasApiKey" class="flex items-start gap-3 p-4 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 text-sm text-amber-700 dark:text-amber-400 max-w-3xl mx-auto">
-            <svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-            <div>
-              <span class="font-semibold">{{ $t('chat.api_not_configured') }}</span>
-              <br />
-              <button @click="router.push('/settings')" class="underline underline-offset-2 mt-1 inline-block hover:no-underline">{{ $t('chat.go_to_settings') }}</button>
-            </div>
-          </div>
-
-          <div v-for="msg in currentMessages" :key="msg.id"
-               class="flex gap-4 w-full"
-               :class="msg.isSelf ? 'justify-end' : 'justify-start'">
-
-            <!-- AI Avatar -->
-            <div v-if="!msg.isSelf" class="shrink-0 mt-1">
-              <n-avatar round :size="32" :src="msg.avatar" class="border border-zinc-200 dark:border-zinc-800" />
+        <!-- Messages Area (No-bubble flow) -->
+        <div class="flex-1 overflow-y-auto px-6 pt-4 pb-4 scroll-smooth" ref="messagesContainer">
+          <div class="max-w-3xl mx-auto py-6 flex flex-col gap-8 pb-36 w-full">
+            
+            <!-- API not configured notice -->
+            <div v-if="activeMode === 'ai' && !hasApiKey" class="flex items-start gap-3 p-4 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 text-sm text-amber-700 dark:text-amber-400 w-full">
+              <svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              <div>
+                <span class="font-semibold">{{ $t('chat.api_not_configured') }}</span>
+                <br />
+                <button @click="router.push('/settings')" class="underline underline-offset-2 mt-1 inline-block hover:no-underline">{{ $t('chat.go_to_settings') }}</button>
+              </div>
             </div>
 
-            <div class="flex flex-col gap-1.5 min-w-0 max-w-[85vw] sm:max-w-[700px]" :class="msg.isSelf ? 'items-end' : 'items-start'">
-              <!-- Sender Name (AI only) -->
-              <div v-if="!msg.isSelf" class="flex items-center gap-2 mb-1">
-                <span class="text-[13px] font-semibold text-zinc-800 dark:text-zinc-200">{{ msg.sender }}</span>
+            <!-- Message Loop -->
+            <div v-for="msg in currentMessages" :key="msg.id" class="flex gap-4 sm:gap-6 group">
+              
+              <!-- Left side: Avatar in styled circle box -->
+              <div 
+                v-if="!msg.isSelf" 
+                class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 border"
+                :class="`bg-${activePersona?.color || 'indigo'}-50 dark:bg-${activePersona?.color || 'indigo'}-950/20 border-${activePersona?.color || 'indigo'}-100 dark:border-${activePersona?.color || 'indigo'}-900/20 text-${activePersona?.color || 'indigo'}-600 dark:text-${activePersona?.color || 'indigo'}-400`"
+              >
+                <n-avatar round :size="24" :src="activePersona?.avatar" class="bg-transparent" />
+              </div>
+              
+              <div 
+                v-else 
+                class="w-8 h-8 rounded-full bg-zinc-150 dark:bg-zinc-800 flex items-center justify-center shrink-0 mt-0.5 border border-zinc-250/30 dark:border-zinc-700/50"
+              >
+                <n-avatar round :size="24" :src="authStore.userInfo?.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'" class="bg-transparent" />
               </div>
 
-              <!-- Message Content -->
-              <div class="relative group flex flex-col w-full" :class="msg.isSelf ? 'items-end' : 'items-start'">
-                <div class="text-[15px] leading-relaxed break-words w-full"
-                     :class="msg.isSelf
-                       ? 'bg-zinc-100 dark:bg-zinc-800/80 text-zinc-900 dark:text-zinc-100 px-5 py-3 rounded-[24px] shadow-sm'
-                       : 'text-zinc-800 dark:text-zinc-200 py-1'">
-                  <!-- Streaming text -->
+              <!-- Right side: Content flow -->
+              <div class="flex-1 min-w-0">
+                <div class="font-semibold text-zinc-900 dark:text-zinc-150 text-sm mb-1">
+                  {{ msg.isSelf ? (authStore.userInfo?.username || (locale === 'zh' ? '我' : 'You')) : msg.sender }}
+                </div>
+                
+                <div class="prose prose-slate dark:prose-invert max-w-none text-zinc-700 dark:text-zinc-300 leading-relaxed text-[15px]">
+                  <!-- User text -->
                   <div v-if="msg.isSelf" class="whitespace-pre-wrap break-words">{{ msg.content }}</div>
+                  <!-- AI Markdown text -->
                   <div v-else class="chat-markdown break-words" v-html="md.render(msg.content)"></div>
                   <!-- Typing cursor for streaming -->
                   <span v-if="msg.isStreaming" class="inline-block w-1.5 h-3.5 ml-0.5 bg-current animate-pulse rounded-sm align-middle"></span>
                 </div>
 
-                <!-- Action Buttons (AI only, shown below text) -->
-                <div v-if="!msg.isSelf" class="flex items-center gap-1 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                   <button @click="copyMessageText(msg.content)" class="flex items-center justify-center p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors outline-none" title="Copy message">
-                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                   </button>
+                <!-- Action Toolbar -->
+                <div v-if="!msg.isSelf" class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity mt-2">
+                  <button @click="copyMessageText(msg.content)" class="p-1.5 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors outline-none" title="Copy message">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                  </button>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <!-- Thinking indicator -->
-          <div v-if="isAiThinking && !streamingMessageId" class="flex gap-4 w-full justify-start">
-            <div class="shrink-0 mt-1">
-              <n-avatar round :size="32" :src="activePersona?.avatar" class="border border-zinc-200 dark:border-zinc-800" />
-            </div>
-            <div class="flex flex-col gap-1.5 min-w-0 max-w-[85vw] sm:max-w-[700px] items-start">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="text-[13px] font-semibold text-zinc-800 dark:text-zinc-200">{{ activePersona?.name }}</span>
-              </div>
-              <div class="py-2 flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
-                <span class="text-[13px] font-medium">{{ $t('chat.thinking') }}</span>
-                <div class="flex gap-1">
-                  <span class="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
-                  <span class="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
-                  <span class="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
 
-        <!-- Input Area -->
-        <div class="p-4 bg-white/60 dark:bg-[#050505]/60 backdrop-blur-xl border-t border-zinc-200/60 dark:border-white/5 shrink-0 z-20 w-full transition-colors relative">
+        <!-- Input Area (Immersive Floating) -->
+        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-[#09090b] dark:via-[#09090b]/80 pt-10 pb-6 px-4 sm:px-6 shrink-0 z-20">
           
           <!-- Stop Button -->
-          <div v-if="activeMode === 'ai' && (isAiThinking || streamingMessageId)" class="flex justify-center absolute -top-12 left-0 right-0 z-30">
-            <button @click="stopGenerating" class="px-4 py-1.5 bg-zinc-800/80 dark:bg-zinc-200/80 hover:bg-zinc-900 dark:hover:bg-white text-white dark:text-zinc-900 text-xs font-semibold flex items-center gap-2 rounded-full shadow-lg backdrop-blur-md transition-all">
+          <div v-if="activeMode === 'ai' && (isAiThinking || streamingMessageId)" class="flex justify-center absolute -top-4 left-0 right-0 z-30">
+            <button @click="stopGenerating" class="px-4 py-1.5 bg-zinc-850/90 dark:bg-zinc-150/90 hover:bg-zinc-900 dark:hover:bg-white text-white dark:text-zinc-900 text-xs font-semibold flex items-center gap-2 rounded-xl shadow-lg backdrop-blur-md transition-all">
               <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
               {{ locale === 'zh' ? '停止生成' : 'Stop Generating' }}
             </button>
           </div>
 
-          <div v-if="activeMode === 'live' && !authStore.isLoggedIn" class="w-full py-4 text-center rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 backdrop-blur-md">
-            <p class="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2">{{ $t('chat.login_required') }}</p>
-            <button @click="router.push('/login')" class="px-5 py-2 inline-block bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-sm font-bold rounded-lg hover:opacity-90 transition-opacity shadow-sm">
+          <div v-if="activeMode === 'live' && !authStore.isLoggedIn" class="max-w-3xl mx-auto py-4 text-center rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 backdrop-blur-md">
+            <p class="text-sm font-medium text-zinc-650 dark:text-zinc-400 mb-2">{{ $t('chat.login_required') }}</p>
+            <button @click="router.push('/login')" class="px-5 py-2 inline-block bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-sm font-bold rounded-xl hover:opacity-90 transition-opacity shadow-sm">
               {{ $t('chat.login_btn') }}
             </button>
           </div>
 
-          <form v-else @submit.prevent="sendMessage" class="relative max-w-4xl mx-auto">
-            <div class="bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-700/80 focus-within:border-indigo-400/60 dark:focus-within:border-indigo-500/60 focus-within:ring-4 focus-within:ring-indigo-500/10 dark:focus-within:ring-indigo-500/10 rounded-[20px] transition-all flex items-end p-1.5 shadow-sm">
-
-              <!-- Emoji Button -->
-              <div class="relative shrink-0 flex items-center justify-center mb-0.5">
-                <button type="button" @click="showEmoji = !showEmoji" class="p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-all outline-none z-10 relative">
-                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                </button>
-                <div v-if="showEmoji" class="absolute bottom-full left-0 mb-3 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-2xl rounded-2xl p-3 w-[280px] max-h-60 overflow-y-auto z-50 flex flex-wrap gap-1.5">
-                  <button type="button" v-for="e in emojis" :key="e" @click="addEmoji(e)" class="text-xl w-8 h-8 flex items-center justify-center hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-lg hover:scale-110 transition-all origin-center">{{ e }}</button>
-                </div>
-                <div v-if="showEmoji" @click="showEmoji = false" class="fixed inset-0 z-40"></div>
-              </div>
-
+          <form v-else @submit.prevent="sendMessage" class="relative max-w-3xl mx-auto">
+            <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 focus-within:border-zinc-350 dark:focus-within:border-zinc-700 rounded-2xl shadow-[0_0_20px_rgba(0,0,0,0.02)] focus-within:shadow-[0_0_25px_rgba(0,0,0,0.05)] transition-all duration-300 flex flex-col">
+              
               <textarea
                 v-model="composeText"
+                @input="adjustInputHeight"
                 @keydown.enter.exact.prevent="sendMessage"
                 :placeholder="$t('chat.type_message')"
-                class="flex-1 max-h-32 min-h-[40px] bg-transparent border-none focus:ring-0 resize-none py-2.5 px-3 text-[15px] outline-none placeholder-zinc-400 dark:text-zinc-300"
+                class="chat-input-textarea w-full max-h-40 min-h-[44px] bg-transparent border-none focus:ring-0 resize-none px-4 py-4 text-[15px] outline-none placeholder-zinc-400 dark:placeholder-zinc-500 text-zinc-800 dark:text-zinc-100"
                 rows="1"
                 :disabled="activeMode === 'ai' && isAiThinking"
               ></textarea>
 
-              <button
-                type="submit"
-                :disabled="!composeText.trim() || isSending || (activeMode === 'ai' && isAiThinking)"
-                class="w-10 h-10 mb-0.5 mr-0.5 rounded-[14px] flex items-center justify-center shrink-0 transition-all outline-none"
-                :class="activeMode === 'live'
-                  ? 'bg-emerald-500 hover:bg-emerald-600 text-white disabled:bg-zinc-100 dark:disabled:bg-zinc-800 disabled:text-zinc-300 dark:disabled:text-zinc-600'
-                  : 'bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 disabled:bg-zinc-100 dark:disabled:bg-zinc-800 disabled:text-zinc-300 dark:disabled:text-zinc-600'">
-                <svg v-if="isSending || isAiThinking" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-                </svg>
-                <svg v-else class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
-              </button>
+              <!-- Bottom Toolbar -->
+              <div class="flex items-center justify-between px-3 pb-3 pt-1 border-t border-zinc-100/50 dark:border-zinc-800/30">
+                <!-- Left: Emoji & Model selector -->
+                <div class="flex items-center gap-1">
+                  <!-- Emoji Button -->
+                  <div class="relative shrink-0 flex items-center justify-center">
+                    <button type="button" @click="showEmoji = !showEmoji" class="p-2 text-zinc-400 hover:text-zinc-755 hover:bg-zinc-100 dark:hover:bg-zinc-850 rounded-lg transition-colors outline-none z-10 relative">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </button>
+                    <div v-if="showEmoji" class="absolute bottom-full left-0 mb-3 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-2xl rounded-2xl p-3 w-[280px] max-h-60 overflow-y-auto z-50 flex flex-wrap gap-1.5">
+                      <button type="button" v-for="e in emojis" :key="e" @click="addEmoji(e)" class="text-xl w-8 h-8 flex items-center justify-center hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-lg hover:scale-110 transition-all origin-center">{{ e }}</button>
+                    </div>
+                    <div v-if="showEmoji" @click="showEmoji = false" class="fixed inset-0 z-40"></div>
+                  </div>
+
+                  <!-- Model Badge -->
+                  <button 
+                    v-if="activeMode === 'ai'"
+                    type="button"
+                    @click="router.push('/settings')"
+                    class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-xs font-semibold text-zinc-500 dark:text-zinc-400 transition-colors ml-1 outline-none"
+                  >
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                    {{ activeModelName }}
+                    <svg class="w-3 h-3 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                  </button>
+                  <div 
+                    v-else 
+                    class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-emerald-600 dark:text-emerald-400"
+                  >
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    {{ activeRoomName }}
+                  </div>
+                </div>
+
+                <!-- Right: send shortcut & Send Button -->
+                <div class="flex items-center gap-3">
+                  <span class="text-xs text-zinc-400 dark:text-zinc-500 hidden sm:block font-medium select-none">↵ Send</span>
+                  <button 
+                    type="submit"
+                    :disabled="!composeText.trim() || isSending || (activeMode === 'ai' && isAiThinking)"
+                    class="bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-zinc-100 dark:text-zinc-900 p-2 rounded-xl transition-colors flex items-center justify-center outline-none active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    <svg v-if="isSending || isAiThinking" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                    </svg>
+                    <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
             </div>
           </form>
+          
+          <!-- Disclaimer -->
+          <div class="text-center mt-3 select-none">
+            <span class="text-[11px] text-zinc-400 dark:text-zinc-500">
+              {{ activeMode === 'ai' ? 'AI 可能会生成不准确的信息。请核实重要的医学或建议。' : '公共聊天室，请文明发言。' }}
+            </span>
+          </div>
+
         </div>
       </template>
 
@@ -295,18 +310,16 @@
       </div>
 
     </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { marked } from 'marked';
-import DOMPurify from 'dompurify';
 import { useAuthStore } from '@/store/auth';
 import { useI18n } from 'vue-i18n';
 import { useMessage } from 'naive-ui';
-import api from '@/api/api';
 import { createChatCompletionStream } from '@/api/chat';
 import { aiPersonas } from '@/data/ai-personas';
 import type { AIPersona } from '@/data/ai-personas';
@@ -314,6 +327,7 @@ import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
 
+const message = useMessage();
 const md = new MarkdownIt();
 
 md.renderer.rules.fence = (tokens, idx) => {
@@ -329,7 +343,7 @@ md.renderer.rules.fence = (tokens, idx) => {
   }
 
   return `
-    <div class="code-block-wrapper my-4 rounded-xl overflow-hidden bg-[#282c34] shadow-sm border border-zinc-700/50">
+    <div class="code-block-wrapper my-4 rounded-xl overflow-hidden bg-[#282c34] text-[#abb2bf] shadow-sm border border-zinc-700/50">
       <div class="flex items-center justify-between px-4 py-2 bg-[#21252b] text-zinc-400 text-xs font-sans">
         <span class="font-mono">${lang || 'text'}</span>
         <button class="copy-btn flex items-center gap-1 hover:text-zinc-200 transition-colors" data-code="${encodeURIComponent(code)}">
@@ -369,6 +383,11 @@ const { t, locale } = useI18n();
 const activeView = ref<'ai' | 'live'>('ai');
 const activeMode = ref<'ai' | 'live'>('ai');
 const activeSession = ref<AIPersona | any | null>(null);
+const activeModelName = computed(() => {
+  const fullModel = localStorage.getItem('chat_model') || 'Qwen/Qwen2.5-7B-Instruct';
+  const parts = fullModel.split('/');
+  return parts[parts.length - 1];
+});
 
 const messagesContainer = ref<HTMLElement | null>(null);
 const composeText = ref('');
@@ -471,7 +490,6 @@ const currentMessages = computed(() => {
   return messageHistory.value[activeSession.value.id] || [];
 });
 
-const activeSessionId = computed(() => activeSession.value?.id);
 
 const activePersona = computed<AIPersona | null>(() => {
   if (activeMode.value !== 'ai' || !activeSession.value) return null;
@@ -512,6 +530,9 @@ const selectChat = (item: AIPersona | any, mode: 'ai' | 'live') => {
     }
   }
   scrollToBottom();
+  nextTick(() => {
+    adjustInputHeight();
+  });
 };
 
 const clearHistory = () => {
@@ -548,6 +569,14 @@ const createRoom = () => {
   }
 };
 
+const adjustInputHeight = (e?: Event) => {
+  const target = (e?.target || document.querySelector('.chat-input-textarea')) as HTMLTextAreaElement | null;
+  if (!target) return;
+  target.style.height = 'auto';
+  const newHeight = Math.min(target.scrollHeight, 160);
+  target.style.height = `${newHeight}px`;
+};
+
 const sendMessage = async () => {
   if (!composeText.value.trim() || !activeSession.value) return;
   if (activeMode.value === 'live' && !authStore.isLoggedIn) {
@@ -558,6 +587,9 @@ const sendMessage = async () => {
   isSending.value = true;
   const content = composeText.value;
   composeText.value = '';
+  nextTick(() => {
+    adjustInputHeight();
+  });
 
   const selfAvatar = authStore.userInfo?.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Guest';
   const selfName = authStore.userInfo?.nickname || authStore.userInfo?.username || 'Guest';
@@ -576,7 +608,7 @@ const sendMessage = async () => {
   scrollToBottom();
 
   if (activeMode.value === 'ai') {
-    await handleAiResponse(content, selfAvatar, selfName);
+    await handleAiResponse(content);
   } else {
     isSending.value = false;
     if (Math.random() > 0.4) {
@@ -596,7 +628,7 @@ const sendMessage = async () => {
   }
 };
 
-const handleAiResponse = async (userContent: string, selfAvatar: string, selfName: string) => {
+const handleAiResponse = async (userContent: string) => {
   const apiKey = localStorage.getItem(API_KEY_STORAGE);
   if (!apiKey) {
     isSending.value = false;
@@ -684,31 +716,6 @@ const scrollToBottom = async () => {
 };
 
 // Persona color helpers
-const personaBorderColor = (color: string) => {
-  const map: Record<string, string> = {
-    blue: 'ring-blue-400 dark:ring-blue-400',
-    violet: 'ring-violet-400 dark:ring-violet-400',
-    amber: 'ring-amber-400 dark:ring-amber-400',
-    emerald: 'ring-emerald-400 dark:ring-emerald-400',
-    rose: 'ring-rose-400 dark:ring-rose-400',
-    cyan: 'ring-cyan-400 dark:ring-cyan-400',
-    slate: 'ring-slate-400 dark:ring-slate-400',
-  };
-  return map[color] || 'ring-indigo-400 dark:ring-indigo-400';
-};
-
-const personaBorderClass = (color: string) => {
-  const map: Record<string, string> = {
-    blue: 'border-blue-300 dark:border-blue-600',
-    violet: 'border-violet-300 dark:border-violet-600',
-    amber: 'border-amber-300 dark:border-amber-600',
-    emerald: 'border-emerald-300 dark:border-emerald-600',
-    rose: 'border-rose-300 dark:border-rose-600',
-    cyan: 'border-cyan-300 dark:border-cyan-600',
-    slate: 'border-slate-300 dark:border-slate-600',
-  };
-  return map[color] || 'border-indigo-300 dark:border-indigo-600';
-};
 
 const personaDotColor = (color: string) => {
   const map: Record<string, string> = {
@@ -723,43 +730,19 @@ const personaDotColor = (color: string) => {
   return map[color] || 'bg-indigo-400';
 };
 
-const personaBadgeClass = (color: string) => {
-  const map: Record<string, string> = {
-    blue: 'bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400',
-    violet: 'bg-violet-100 dark:bg-violet-500/20 text-violet-600 dark:text-violet-400',
-    amber: 'bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400',
-    emerald: 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400',
-    rose: 'bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400',
-    cyan: 'bg-cyan-100 dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400',
-    slate: 'bg-slate-100 dark:bg-slate-500/20 text-slate-600 dark:text-slate-400',
-  };
-  return map[color] || 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400';
-};
 
-const personaCapClass = (color: string) => {
-  const map: Record<string, string> = {
-    blue: 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400',
-    violet: 'bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400',
-    amber: 'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400',
-    emerald: 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
-    rose: 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400',
-    cyan: 'bg-cyan-50 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400',
-    slate: 'bg-slate-50 dark:bg-slate-500/10 text-slate-600 dark:text-slate-400',
-  };
-  return map[color] || 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400';
-};
 
-const personaNaiveType = (color: string) => {
-  const map: Record<string, 'info' | 'primary' | 'warning' | 'success' | 'error' | 'default'> = {
-    blue: 'info',
-    violet: 'primary',
-    amber: 'warning',
-    emerald: 'success',
-    rose: 'error',
-    cyan: 'info',
-    slate: 'default',
+const badgeClass = (color: string) => {
+  const map: Record<string, string> = {
+    blue: 'bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400',
+    violet: 'bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400',
+    amber: 'bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400',
+    emerald: 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400',
+    rose: 'bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400',
+    cyan: 'bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400',
+    slate: 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400',
   };
-  return map[color] || 'primary';
+  return map[color] || 'bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400';
 };
 </script>
 
@@ -767,30 +750,45 @@ const personaNaiveType = (color: string) => {
 @reference "../../style.css";
 
 .chat-markdown {
-  @apply text-[14px] leading-relaxed;
+  @apply text-[14.5px] leading-relaxed text-zinc-800 dark:text-zinc-200;
 }
 .chat-markdown p {
-  @apply mb-2 last:mb-0;
+  @apply mb-3 last:mb-0;
 }
 .chat-markdown code {
-  @apply bg-zinc-100 dark:bg-zinc-700/50 px-1.5 py-0.5 rounded text-sm text-pink-500 dark:text-pink-400 font-mono;
+  @apply bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-[13px] text-indigo-600 dark:text-indigo-400 font-mono font-medium;
+}
+.chat-markdown pre:not(.hljs) {
+  @apply bg-zinc-50 dark:bg-zinc-950 p-4 rounded-xl border border-zinc-200/50 dark:border-zinc-800/80 font-mono text-[13px] text-zinc-800 dark:text-zinc-200 overflow-x-auto my-3;
+}
+.chat-markdown pre code {
+  @apply p-0 bg-transparent text-current text-[13px] dark:bg-transparent rounded-none;
 }
 .chat-markdown h1, .chat-markdown h2, .chat-markdown h3 {
-  @apply font-bold mt-4 mb-2;
+  @apply font-bold mt-4 mb-2 text-zinc-900 dark:text-white;
 }
 .chat-markdown h1 { @apply text-lg; }
 .chat-markdown h2 { @apply text-base; }
 .chat-markdown h3 { @apply text-sm; }
 .chat-markdown ul {
-  @apply list-disc list-inside mb-2 pl-2;
+  @apply list-disc list-outside ml-5 mb-3 space-y-1.5;
 }
 .chat-markdown ol {
-  @apply list-decimal list-inside mb-2 pl-2;
+  @apply list-decimal list-outside ml-5 mb-3 space-y-1.5;
+}
+.chat-markdown li {
+  @apply pl-0.5;
 }
 .chat-markdown blockquote {
-  @apply border-l-4 border-indigo-500 pl-3 italic text-zinc-500 dark:text-zinc-400 my-2;
+  @apply border-l-4 border-indigo-500 bg-zinc-50 dark:bg-zinc-800/20 px-4 py-2 rounded-r-lg italic text-zinc-600 dark:text-zinc-300 my-3;
 }
 .chat-markdown a {
   @apply text-indigo-500 hover:underline;
+}
+.chat-markdown hr {
+  @apply my-4 border-t border-zinc-200/60 dark:border-zinc-800/80;
+}
+.chat-markdown strong {
+  @apply font-bold text-zinc-900 dark:text-white;
 }
 </style>

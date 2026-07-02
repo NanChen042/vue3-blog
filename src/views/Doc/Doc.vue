@@ -165,7 +165,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { syncedDocMenus as docMenus } from '@/data/synced-docs';
 import { useStorage, useMutationObserver } from '@vueuse/core';
 import mermaid from 'mermaid';
-import { FlaskOutline, MenuOutline } from '@vicons/ionicons5';
+import { FlaskOutline } from '@vicons/ionicons5';
 
 const categoryMap: Record<string, string> = {
   'Vue': 'Vue3 系列',

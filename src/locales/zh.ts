@@ -37,6 +37,7 @@ export default {
   },
   // --- 新增的主页翻译区块 ---
   home: {
+    search_placeholder: '搜索文章或工具...',
     hero: {
       badge: 'Hi, 欢迎来到我的主页',
       title_prefix: '一些尝试',

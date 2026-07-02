@@ -18,7 +18,7 @@ export function randomText(min: number, max: number) {
   return result;
 }
 import loadFail from "../assets/load-fail.png";
-import type { ItemInfo, ItemList } from "@/types";
+import type { ItemList } from "@/types";
 
 let id = 0;
 

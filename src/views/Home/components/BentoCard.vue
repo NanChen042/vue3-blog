@@ -8,7 +8,7 @@
     ]"
     :style="cardStyle"
     @mouseenter="isHovered = true"
-    @mouseleave="isHovered = false; resetTilt()"
+    @mouseleave="isHovered = false"
   >
     <!-- Spotlight Effect -->
     <div 

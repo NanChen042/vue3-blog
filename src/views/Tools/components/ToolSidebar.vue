@@ -10,7 +10,7 @@
     ></div>
 
     <div
-      v-for="(category, index) in categories"
+      v-for="category in categories"
       :key="category.title"
       @click="$emit('scroll-to', category.title)"
       class="w-full flex items-center justify-between px-3 h-[36px] cursor-pointer transition-all duration-300 rounded-xl relative group z-10 mb-[4px]"

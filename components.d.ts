@@ -11,6 +11,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AnimatedForm: typeof import('./src/components/ui/AnimatedForm.vue')['default']
+    BoxReveal: typeof import('./src/components/ui/BoxReveal.vue')['default']
     ButtonStyle: typeof import('./src/components/ButtonStyle.vue')['default']
     FallingPattern: typeof import('./src/components/ui/FallingPattern.vue')['default']
     IconSwitch: typeof import('./src/components/IconSwitch.vue')['default']
@@ -35,8 +37,14 @@ declare module 'vue' {
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']
     NNotificationProvider: typeof import('naive-ui')['NNotificationProvider']
     NSpace: typeof import('naive-ui')['NSpace']
+    NTab: typeof import('naive-ui')['NTab']
+    NTabs: typeof import('naive-ui')['NTabs']
     NTag: typeof import('naive-ui')['NTag']
+    OrbitingCircles: typeof import('./src/components/ui/OrbitingCircles.vue')['default']
+    Ripple: typeof import('./src/components/ui/Ripple.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SpotlightInput: typeof import('./src/components/ui/SpotlightInput.vue')['default']
+    TechOrbitDisplay: typeof import('./src/components/ui/TechOrbitDisplay.vue')['default']
   }
 }

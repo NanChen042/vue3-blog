@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, shallowRef } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import * as THREE from 'three';
 
 const container = ref<HTMLElement | null>(null);

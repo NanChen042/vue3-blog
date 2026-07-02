@@ -1,11 +1,14 @@
 <template>
-  <n-layout position="absolute" style="color: var(--db-text-primary)">
+  <n-layout position="absolute" class="bg-[#f8f9fa] dark:bg-[#09090b]" style="color: var(--db-text-primary)">
+    
+    <!-- Global Grid Background -->
+    <div class="fixed inset-0 z-0 pointer-events-none opacity-40 dark:opacity-20 bento-grid-bg"></div>
 
-    <!-- Floating Liquid Glass Header -->
+    <!-- Header -->
     <div class="fixed top-0 left-0 w-full z-50 flex justify-center pointer-events-none transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] pt-0">
       <n-layout-header 
         class="transition-all duration-500 pointer-events-auto"
-        :class="isScrolled ? 'liquid-glass-header w-full' : 'bg-transparent border-b border-transparent w-full'"
+        :class="isScrolled ? 'liquid-glass-header w-full' : 'bg-transparent border-transparent w-full'"
         style="height: 72px;"
       >
         <Header />
@@ -16,12 +19,21 @@
     <n-layout-content
       id="main-scroll-container"
       position="absolute"
-      :style="{ top: '0px', bottom: showFooter ? '52px' : '0px' }"
       class="scroll-smooth"
-      style="background: transparent; overflow-y: auto;"
+      :style="{
+        top: '0px',
+        bottom: showFooter ? '52px' : '0px',
+        background: 'transparent',
+        overflowY: isFixedLayout ? 'hidden' : 'auto',
+        height: isFixedLayout ? '100%' : 'auto'
+      }"
       @scroll="handleScroll"
     >
-      <div style="padding-top: 88px; min-height: 100%;">
+      <div 
+        :style="isFixedLayout 
+          ? { height: '100%', paddingTop: '72px', boxSizing: 'border-box' } 
+          : { paddingTop: '88px', minHeight: '100%' }"
+      >
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />
@@ -64,24 +76,25 @@ const handleScroll = (e: Event) => {
   isScrolled.value = target.scrollTop > 20;
 };
 const showFooter = computed(() => !['/chat', '/settings'].includes(route.path));
+const isFixedLayout = computed(() => ['/chat', '/settings'].includes(route.path));
 </script>
 
 <style scoped>
 .liquid-glass-header {
-  background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(32px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6) !important;
   box-shadow: 
     inset 0 1px 1px rgba(255, 255, 255, 0.9),
-    0 10px 40px -10px rgba(0, 0, 0, 0.1);
+    0 10px 40px -10px rgba(0, 0, 0, 0.05) !important;
 }
 
 html.dark .liquid-glass-header {
-  background: rgba(20, 20, 20, 0.4);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(20, 20, 20, 0.5) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 
-    inset 0 1px 1px rgba(255, 255, 255, 0.2),
-    0 10px 40px -10px rgba(0, 0, 0, 0.5);
+    inset 0 1px 1px rgba(255, 255, 255, 0.1),
+    0 10px 40px -10px rgba(0, 0, 0, 0.5) !important;
 }
 </style>

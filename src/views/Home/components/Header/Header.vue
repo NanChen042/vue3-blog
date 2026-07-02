@@ -97,7 +97,7 @@
           <template v-else>
             <button
               @click="router.push('/login')"
-              class="db-icon-btn"
+              class="db-login-btn"
               style="width: auto; padding: 0 0.875rem; border-radius: 9999px; background: var(--db-nav-active-bg); color: var(--db-nav-active-text); font-size: 0.8125rem; font-weight: 600;"
             >
               Login
@@ -286,3 +286,35 @@ const toggleTheme = (event: MouseEvent) => {
   });
 };
 </script>
+
+<style scoped>
+/* 彻底去除顶部导航栏内部所有“胶囊容器”的背景、边框和阴影，使其文字和图标直接悬浮在网格背景上 */
+.db-card, .db-nav, .db-icon-btn {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 右侧图标悬浮时可以保留微微的背景以提升交互感，但默认状态绝对透明 */
+.db-icon-btn:hover {
+  background: rgba(128, 128, 128, 0.1) !important;
+}
+
+.db-login-btn {
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: all 0.2s ease;
+}
+.db-login-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+.db-login-btn:active {
+  transform: translateY(0);
+}
+</style>

@@ -84,16 +84,19 @@
 import { ref, computed } from 'vue';
 import { NCard, NText, NTag, NButton } from 'naive-ui';
 
-const props = defineProps({
-  widget: {
-    type: Object,
-    required: true
-  },
-  widgetComponent: {
-    type: Object,
-    required: true
-  }
-});
+interface WidgetData {
+  name: string;
+  desc: string;
+  sizes: string[];
+  hot: string | number;
+  type: string;
+  [key: string]: any;
+}
+
+const props = defineProps<{
+  widget: WidgetData;
+  widgetComponent: any;
+}>();
 
 defineEmits(['add']);
 

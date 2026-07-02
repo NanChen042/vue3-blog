@@ -123,12 +123,10 @@
 </template>
 
 <script setup lang="ts">
-import { h, computed, ref } from "vue";
-import { useRoute, useRouter, RouterLink } from "vue-router";
+import { computed, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useI18n } from 'vue-i18n';
-import type { MenuOption } from 'naive-ui';
-import { NIcon } from 'naive-ui';
-import { DocumentTextOutline, PricetagsOutline, ChevronDownOutline, HomeOutline, HardwareChipOutline, GameControllerOutline, ChatbubbleEllipsesOutline, FlaskOutline } from '@vicons/ionicons5';
+import { DocumentTextOutline, HomeOutline, HardwareChipOutline, GameControllerOutline, ChatbubbleEllipsesOutline, FlaskOutline } from '@vicons/ionicons5';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -144,52 +142,7 @@ const props = defineProps({
 const emit = defineEmits(["item-click"]);
 defineOptions({ name: "NavMenu" });
 
-function renderIcon(icon: any) {
-  return () => h(NIcon, { class: 'text-purple-500', size: 18 }, { default: () => h(icon) });
-}
 
-// === Desktop Native n-menu Options ===
-const menuOptions = computed<MenuOption[]>(() => [
-  {
-    label: () => h(RouterLink, { to: '/home' }, { default: () => h('span', { class: 'font-medium text-[14px] px-1' }, t('nav.home')) }),
-    key: '/home',
-  },
-  {
-    label: () => h('span', { class: 'font-medium text-[14px] px-1 flex items-center gap-1 cursor-pointer' }, [
-      t('nav.blog'),
-      h(NIcon, { size: 14, class: 'opacity-60 transition-transform group-hover:rotate-180' }, { default: () => h(ChevronDownOutline) })
-    ]),
-    key: 'blog-parent',
-    children: [
-      {
-        label: () => h(RouterLink, { to: '/blog' }, { default: () => t('nav.latest') }),
-        key: '/blog',
-        icon: renderIcon(DocumentTextOutline)
-      },
-      {
-        label: () => h(RouterLink, { to: '/categories' }, { default: () => t('nav.categories') }),
-        key: '/categories',
-        icon: renderIcon(PricetagsOutline)
-      }
-    ]
-  },
-  {
-    label: () => h(RouterLink, { to: '/tools' }, { default: () => h('span', { class: 'font-medium text-[14px] px-1' }, t('nav.tools')) }),
-    key: '/tools',
-  },
-  {
-    label: () => h(RouterLink, { to: '/games' }, { default: () => h('span', { class: 'font-medium text-[14px] px-1' }, t('nav.games')) }),
-    key: '/games',
-  },
-  {
-    label: () => h(RouterLink, { to: '/chat' }, { default: () => h('span', { class: 'font-medium text-[14px] px-1' }, t('nav.chat')) }),
-    key: '/chat',
-  },
-  {
-    label: () => h(RouterLink, { to: '/lab' }, { default: () => h('span', { class: 'font-medium text-[14px] px-1' }, t('nav.lab')) }),
-    key: '/lab',
-  }
-]);
 
 // === Custom Mobile Navigation Data ===
 const expanded = ref<string[]>(['blog-parent']); // Default expanded
@@ -238,9 +191,6 @@ const handleNavigate = (path: string) => {
   emit("item-click");
 };
 
-const handleSelect = (key: string) => {
-  emit("item-click");
-};
 </script>
 
 <style scoped>

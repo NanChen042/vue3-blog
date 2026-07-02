@@ -60,7 +60,7 @@
     
     <!-- Column 1 -->
     <div class="relative ml-3 pl-6 border-l border-zinc-200 dark:border-zinc-800 space-y-6">
-      <div v-for="(model, index) in col1" :key="model.id" @click="router.push('/doc/' + model.id)" class="relative group/item cursor-pointer">
+      <div v-for="model in col1" :key="model.id" @click="router.push('/doc/' + model.id)" class="relative group/item cursor-pointer">
         <!-- 横线 -->
         <div class="absolute -left-6 top-3 w-4 h-px bg-zinc-200 dark:bg-zinc-800 group-hover/item:bg-indigo-400 dark:group-hover/item:bg-indigo-600 transition-colors z-10"></div>
         <!-- 节点 (绝对居中在竖线上) -->
@@ -82,7 +82,7 @@
 
     <!-- Column 2 -->
     <div class="relative ml-3 pl-6 border-l border-zinc-200 dark:border-zinc-800 space-y-6">
-      <div v-for="(model, index) in col2" :key="model.id" @click="router.push('/doc/' + model.id)" class="relative group/item cursor-pointer">
+      <div v-for="model in col2" :key="model.id" @click="router.push('/doc/' + model.id)" class="relative group/item cursor-pointer">
         <!-- 横线 -->
         <div class="absolute -left-6 top-3 w-4 h-px bg-zinc-200 dark:bg-zinc-800 group-hover/item:bg-fuchsia-400 dark:group-hover/item:bg-fuchsia-600 transition-colors z-10"></div>
         <!-- 节点 (绝对居中在竖线上) -->

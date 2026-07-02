@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141e30"/>
+      <stop offset="100%" stop-color="#243b55"/>
+    </linearGradient>
+    <linearGradient id="snakeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a8ff78"/>
+      <stop offset="100%" stop-color="#78ffd6"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#00000030"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#bg)"/>
+
+  <!-- Title -->
+  <text x="200" y="48" font-family="Arial, sans-serif" font-size="44" font-weight="900" fill="#a8ff78" text-anchor="middle" letter-spacing="1">SNAKE</text>
+  <text x="200" y="66" font-family="Arial, sans-serif" font-size="10" fill="#78ffd6" text-anchor="middle" font-weight="bold" letter-spacing="3">CLASSIC RETRO GAME</text>
+
+  <!-- Board: x=60, y=85, 280×190 -->
+  <rect x="60" y="85" width="280" height="190" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="2" filter="url(#shadow)"/>
+
+  <!-- Grid lines (faint) -->
+  <path d="M 80 85 L 80 275 M 100 85 L 100 275 M 120 85 L 120 275 M 140 85 L 140 275 M 160 85 L 160 275 M 180 85 L 180 275 M 200 85 L 200 275 M 220 85 L 220 275 M 240 85 L 240 275 M 260 85 L 260 275 M 280 85 L 280 275 M 300 85 L 300 275 M 320 85 L 320 275" stroke="#1e293b" stroke-width="0.5"/>
+  <path d="M 60 105 L 340 105 M 60 125 L 340 125 M 60 145 L 340 145 M 60 165 L 340 165 M 60 185 L 340 185 M 60 205 L 340 205 M 60 225 L 340 225 M 60 245 L 340 245 M 60 265 L 340 265" stroke="#1e293b" stroke-width="0.5"/>
+
+  <!-- Food (Apple) at (270, 155) -->
+  <circle cx="270" cy="155" r="7" fill="#ff4e50" filter="url(#shadow)"/>
+  <!-- apple leaf -->
+  <path d="M 270 148 Q 273 143 276 145 Q 273 147 270 148" fill="#a8ff78"/>
+
+  <!-- Snake body blocks (each 20x20) -->
+  <!-- Tail -->
+  <rect x="100" y="205" width="20" height="20" rx="3" fill="url(#snakeGrad)"/>
+  <rect x="120" y="205" width="20" height="20" rx="3" fill="url(#snakeGrad)"/>
+  <rect x="140" y="205" width="20" height="20" rx="3" fill="url(#snakeGrad)"/>
+  <rect x="160" y="205" width="20" height="20" rx="3" fill="url(#snakeGrad)"/>
+  <rect x="180" y="205" width="20" height="20" rx="3" fill="url(#snakeGrad)"/>
+  <rect x="180" y="185" width="20" height="20" rx="3" fill="url(#snakeGrad)"/>
+  <rect x="180" y="165" width="20" height="20" rx="3" fill="url(#snakeGrad)"/>
+  <rect x="200" y="165" width="20" height="20" rx="3" fill="url(#snakeGrad)"/>
+  <rect x="220" y="165" width="20" height="20" rx="3" fill="url(#snakeGrad)"/>
+  
+  <!-- Head with eyes -->
+  <g filter="url(#shadow)">
+    <rect x="240" y="165" width="20" height="20" rx="4" fill="#78ffd6"/>
+    <!-- eyes -->
+    <circle cx="252" cy="171" r="2.5" fill="#0f172a"/>
+    <circle cx="252" cy="179" r="2.5" fill="#0f172a"/>
+    <!-- tongue -->
+    <path d="M 260 175 L 266 175 M 266 173 L 268 171 M 266 177 L 268 179" stroke="#ff4e50" stroke-width="1.5" fill="none"/>
+  </g>
+</svg>

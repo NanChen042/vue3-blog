@@ -140,7 +140,7 @@ defineOptions({ name: 'GameDetail' });
 
 const route = useRoute();
 const router = useRouter();
-const { t, locale } = useI18n();
+const { locale } = useI18n();
 
 const game = ref<Game | null>(null);
 const gameComponent = shallowRef<any>(null);

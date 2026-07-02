@@ -1,5 +1,3 @@
-// src/api/user.ts
-import request from '../utils/request';
 import type { ApiResponse } from '@/types';
 
 // Normally this would be: 

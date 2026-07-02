@@ -18,7 +18,20 @@ const createDoc = (loader: any) => defineAsyncComponent({
   delay: 50,
 });
 
-export const syncedDocMenus = [
+export interface DocItem {
+  id: string;
+  title: string;
+  description: string;
+  component: any;
+  projectLink?: string;
+}
+
+export interface DocCategory {
+  title: string;
+  items: DocItem[];
+}
+
+export const syncedDocMenus: DocCategory[] = [
   {
     title: 'AI',
     items: [
